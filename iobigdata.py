@@ -2,7 +2,22 @@
 import psutil, gc
 from time import sleep
 from threading import Lock
-from singleton import Singleton
+
+# Thread-sage Singleton
+import threading
+class Singleton(type):
+  _instances = {}
+  _lock = threading.Lock()
+
+  def __call__(cls, *args, **kwargs):
+    if cls not in cls._instances:
+      with cls._lock:
+        # another thread could have created the instance
+        # before we acquired the lock. So check that the
+        # instance is still nonexistent.
+        if cls not in cls._instances:
+          cls._instances[cls] = super().__call__(*args, **kwargs)
+    return cls._instances[cls]
 
 mem_manager = lambda len: IOBigData().lock(len=len)
 
@@ -32,12 +47,15 @@ class IOBigData(metaclass=Singleton):
             self.iobd.unlock_ram(ram_amount = self.len)
             gc.collect()
 
-    def __init__(self) -> None:
-        self.log = lambda message: print(message)
+    def __init__(self, log = lambda message: print(message)) -> None:
+        self.log = log
         self.ram_pool = lambda: psutil.virtual_memory().available
         self.ram_locked = 0
         self.get_ram_avaliable = lambda: self.ram_pool() - self.ram_locked
         self.amount_lock = Lock()
+
+    def set_log(self, log = lambda message: print(message)) -> None:
+        self.log = log
 
     def stats(self, message: str):
         with self.amount_lock:
