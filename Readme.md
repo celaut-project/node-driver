@@ -1,0 +1,1 @@
+It's format and protocol agnostic.

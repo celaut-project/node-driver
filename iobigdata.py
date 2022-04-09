@@ -1,33 +1,12 @@
 # I/O Big Data utils.
-import psutil, gc
+import gc
 from time import sleep
 from threading import Lock
+import gas_manager as gm
 
-# Thread-sage Singleton
-import threading
-class Singleton(type):
-  _instances = {}
-  _lock = threading.Lock()
-
-  def __call__(cls, *args, **kwargs):
-    if cls not in cls._instances:
-      with cls._lock:
-        # another thread could have created the instance
-        # before we acquired the lock. So check that the
-        # instance is still nonexistent.
-        if cls not in cls._instances:
-          cls._instances[cls] = super().__call__(*args, **kwargs)
-    return cls._instances[cls]
+from utils import Singleton
 
 mem_manager = lambda len: IOBigData().lock(len=len)
-
-def read_file(filename) -> bytes:
-    def generator(filename):
-        with open(filename, 'rb') as entry:
-            for chunk in iter(lambda: entry.read(1024 * 1024), b''):
-                    yield chunk
-    return b''.join([b for b in generator(filename)])
-
 class IOBigData(metaclass=Singleton):
 
     class RamLocker(object):
@@ -47,9 +26,12 @@ class IOBigData(metaclass=Singleton):
             self.iobd.unlock_ram(ram_amount = self.len)
             gc.collect()
 
-    def __init__(self, log = lambda message: print(message)) -> None:
+    def __init__(self, 
+            log = lambda message: print(message),
+            ram_pool_method = lambda : gm.GasManager().get_ram_pool()
+        ) -> None:
         self.log = log
-        self.ram_pool = lambda: psutil.virtual_memory().available
+        self.ram_pool = ram_pool_method
         self.ram_locked = 0
         self.get_ram_avaliable = lambda: self.ram_pool() - self.ram_locked
         self.amount_lock = Lock()
