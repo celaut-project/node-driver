@@ -1,7 +1,4 @@
-import celaut_pb2
 from utils import Singleton
-
-
 class GasManager(metaclass=Singleton):
 
     def __init__(self) -> None:
