@@ -51,7 +51,6 @@ class IOBigData(metaclass=Singleton):
         self.ram_pool = ram_pool_method
         self.gas = gas  # TODO will be a polynomy.
         self.modify_resources = modify_resources
-        self.get_resources = get_resources
 
         self.log = log
         self.ram_locked = 0
@@ -98,9 +97,8 @@ class IOBigData(metaclass=Singleton):
             print(sum(self.wait) - self.gas < self.gas)
             print(self.gas >= sum(self.wait)) 
 
-            self.modify_resources(self.ram_pool + sum(self.wait) - self.gas)
+            self.ram_pool = lambda: self.modify_resources(self.ram_pool + sum(self.wait) - self.gas)
             self.gas += self.gas - sum(self.wait)
-            self.ram_pool = lambda: self.get_resources()
 
     def __push_wait_list(self, len: int):
         with self.wait_lock:
