@@ -4,9 +4,22 @@
 
 from time import sleep
 from iobigdata import IOBigData, mem_manager
-from gas_manager import GasManager
-from threading import Thread
-import psutil
+from threading import Thread, Lock
+
+RAM_POOL = 10
+GAS = 0
+class NodeResourcesManagerSimulator:
+    def __init__(self) -> None:
+        self.ram_pool = RAM_POOL
+        self.lock = Lock()
+
+    def modify_resources(self, l):
+        with self.lock:
+            print('\n ei mai friend, yu want to change the ram, ok, i change it. ->  ', l, '\n')
+            self.ram_pool = l
+
+    def get_resources(self):
+        return self.ram_pool
 
 def p1():
     with mem_manager(len=7):
@@ -23,8 +36,15 @@ def p3():
         sleep(3)
         print(3)
 
-GasManager().put_initial_ram_pool(mem_limit = 10)
-# IOBigData(ram_pool_method= lambda: psutil.virtual_memory().total) Simulacion de nodo.
+# IOBigData(ram_pool_method= lambda: psutil.virtual_memory().total) Simulacion de uso de la librería en nodo.
+
+nrms = NodeResourcesManagerSimulator()
+IOBigData(
+    ram_pool_method = lambda: RAM_POOL,
+    gas = GAS,
+    modify_resources= lambda l: nrms.modify_resources(l),
+    get_resources= lambda: nrms.get_resources()
+)
 
 Thread( target=p1 ).start()
 sleep(1)
