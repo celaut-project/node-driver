@@ -49,8 +49,8 @@ class IOBigData(metaclass=Singleton):
         ) -> None:
 
         self.ram_pool = ram_pool_method
-        self.gas = gas  # TODO will be a polynomy.
-        self.modify_resources = modify_resources
+        #self.gas = gas  # TODO will be a polynomy.
+        self.modify_resources = modify_resources  # (min_memory_limit, max_memory_limit) -> memory_limit_updated
 
         self.log = log
         self.ram_locked = 0
@@ -83,7 +83,7 @@ class IOBigData(metaclass=Singleton):
             self.log('RAM LOCKED     -> '+ IOBigData.convert_size(self.ram_locked))
             self.log('RAM AVALIABLE  -> '+ IOBigData.convert_size(self.get_ram_avaliable()))
             self.log('RAM WAITING    -> '+ IOBigData.convert_size(sum(self.wait)))
-            self.log('GAS            -> '+ str(self.gas))
+            #self.log('GAS            -> '+ str(self.gas))
             self.log('-----------------------------------------\n')
 
 
@@ -97,7 +97,10 @@ class IOBigData(metaclass=Singleton):
             print(sum(self.wait) - self.gas < self.gas)
             print(self.gas >= sum(self.wait)) 
 
-            self.ram_pool = lambda: self.modify_resources(self.ram_pool + sum(self.wait) - self.gas)
+            self.ram_pool = lambda: self.modify_resources((
+                    self.ram_pool + sum(self.wait) - self.gas,  # min resources.
+                    self.ram_pool + sum(self.wait) - self.gas  # max resources.
+            ))
             self.gas += self.gas - sum(self.wait)
 
     def __push_wait_list(self, len: int):

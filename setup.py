@@ -8,7 +8,7 @@ setup(
     author='Josemi Avellana',
     author_email='josemi.bnf@gmail.com',
 
-    py_modules=['iobigdata', 'service_gateway_interface'],
+    py_modules=['iobigdata'],
     install_requires=[
     ],
 )

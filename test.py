@@ -7,7 +7,6 @@ from iobigdata import IOBigData, mem_manager
 from threading import Thread, Lock
 
 RAM_POOL = 10
-GAS = 0
 class NodeResourcesManagerSimulator:
     def __init__(self) -> None:
         self.ram_pool = RAM_POOL
@@ -41,7 +40,6 @@ def p3():
 nrms = NodeResourcesManagerSimulator()
 IOBigData(
     ram_pool_method = lambda: RAM_POOL,
-    gas = GAS,
     modify_resources= lambda l: nrms.modify_resources(l),
     get_resources= lambda: nrms.get_resources()
 )
