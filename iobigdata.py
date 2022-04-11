@@ -62,13 +62,18 @@ class IOBigData(metaclass=Singleton):
         return self.RamLocker(len = len, iobd = self)
 
     def lock_ram(self, ram_amount: int, wait: bool = True):
-        self.stats('go to lock ' + IOBigData.convert_size(ram_amount))
-        if wait:
-            self.wait_to_prevent_kill(len = ram_amount)
-        elif not self.prevent_kill(len = ram_amount):
-            raise Exception
-        with self.amount_lock:
-            self.ram_locked += ram_amount
+        while True:
+            self.stats('go to lock ' + IOBigData.convert_size(ram_amount))
+            if wait:
+                self.wait_to_prevent_kill(len = ram_amount)
+            elif not self.prevent_kill(len = ram_amount):
+                raise Exception
+            with self.amount_lock:
+                if self.get_ram_avaliable() > ram_amount:
+                    self.ram_locked += ram_amount
+                    break
+                else:
+                    continue
         self.stats('locked')
 
     def unlock_ram(self, ram_amount: int):

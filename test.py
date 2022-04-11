@@ -1,4 +1,7 @@
-# Demostracion de cola eficiente. Se debe de colocar self.ram_pool = lambda: 10 # psutil.virtual_memory().available en RamLocker.__init__
+# Demostracion de cola eficiente.
+#  Se debe de colocar self.ram_pool = lambda: 10 
+# # psutil.virtual_memory().available en RamLocker.__init__
+
 from time import sleep
 from iobigdata import mem_manager
 from threading import Thread
