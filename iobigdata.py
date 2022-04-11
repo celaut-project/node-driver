@@ -92,7 +92,7 @@ class IOBigData(metaclass=Singleton):
     # Gas manager methods.
     def __update_resources(self):
         if self.gas < sum(self.wait) and sum(self.wait) - self.gas < self.gas \
-            or self.gas >= sum(self.wait) and self.gas < self.ram_locked:
+            or self.gas >= sum(self.wait) and self.gas < self.ram_locked:  # TODO check.
 
             print(self.gas < sum(self.wait))
             print(sum(self.wait) - self.gas < self.gas)
