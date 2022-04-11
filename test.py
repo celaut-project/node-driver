@@ -10,7 +10,7 @@ import psutil
 
 def p1():
     with mem_manager(len=7):
-        sleep(3)
+        sleep(6)
         print(1)
 
 def p2():
