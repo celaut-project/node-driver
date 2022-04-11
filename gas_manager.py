@@ -27,8 +27,8 @@ class GasManager(metaclass=Singleton):
         self.wait.append(mem_limit)
         # Si supera cierto límite de espera, aumenta con modify_resources()
 
-    def push_wait_list(self, mem_limit: int):
-        self.wait.append(mem_limit)
+    def pop_wait_list(self, mem_limit: int):
+        self.wait.remove(mem_limit)
 
     def get_ram_pool(self) -> int:
         return self.ram_pool

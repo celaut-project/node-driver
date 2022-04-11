@@ -4,6 +4,7 @@
 
 from time import sleep
 from iobigdata import mem_manager
+from gas_manager import GasManager
 from threading import Thread
 
 def p1():
@@ -20,6 +21,8 @@ def p3():
     with mem_manager(len=3):
         sleep(3)
         print(3)
+
+GasManager().put_initial_ram_pool(mem_limit = 10)
 
 Thread( target=p1 ).start()
 sleep(1)

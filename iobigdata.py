@@ -28,10 +28,20 @@ class IOBigData(metaclass=Singleton):
 
     def __init__(self, 
             log = lambda message: print(message),
-            ram_pool_method = lambda : gm.GasManager().get_ram_pool()
+            ram_pool_method = None   # Will be None if it's used by a service.
         ) -> None:
+        if ram_pool_method:
+            self.ram_pool = ram_pool_method
+            self.push_gas_wait = lambda len: len  # Don't work.
+            self.pop_gas_wait = lambda len: len  # Don't work.
+            self.get_wait_amount = lambda: 'Unknown'
+        else:
+            self.ram_pool = lambda : gm.GasManager().get_ram_pool()
+            self.push_gas_wait = lambda len: gm.GasManager().push_wait_list(mem_limit=len)
+            self.pop_gas_wait = lambda len: gm.GasManager().pop_wait_list(mem_limit=len)
+            self.get_wait_amount = lambda: IOBigData.convert_size(sum(gm.GasManager().wait))
+
         self.log = log
-        self.ram_pool = ram_pool_method
         self.ram_locked = 0
         self.get_ram_avaliable = lambda: self.ram_pool() - self.ram_locked
         self.amount_lock = Lock()
@@ -53,23 +63,29 @@ class IOBigData(metaclass=Singleton):
     def stats(self, message: str):
         with self.amount_lock:
             self.log('\n--------- '+message+' -------------')
-            self.log('RAM POOL      -> '+ IOBigData.convert_size(self.ram_pool()))
-            self.log('RAM LOCKED    -> '+ IOBigData.convert_size(self.ram_locked))
-            self.log('RAM AVALIABLE -> '+ IOBigData.convert_size(self.get_ram_avaliable()))
+            self.log('RAM POOL       -> '+ IOBigData.convert_size(self.ram_pool()))
+            self.log('RAM LOCKED     -> '+ IOBigData.convert_size(self.ram_locked))
+            self.log('RAM AVALIABLE  -> '+ IOBigData.convert_size(self.get_ram_avaliable()))
+            self.log('For gas manager: RAM WAITING      '+ self.get_wait_amount())
             self.log('-----------------------------------------\n')
 
     def lock(self, len):
         return self.RamLocker(len = len, iobd = self)
 
     def lock_ram(self, ram_amount: int, wait: bool = True):
+        self.push_gas_wait(len=ram_amount)
         while True:
             self.stats('go to lock ' + IOBigData.convert_size(ram_amount))
             if wait:
                 self.wait_to_prevent_kill(len = ram_amount)
+
             elif not self.prevent_kill(len = ram_amount):
+                self.pop_gas_wait(len=ram_amount)
                 raise Exception
+
             with self.amount_lock:
                 if self.get_ram_avaliable() > ram_amount:
+                    self.pop_gas_wait(len=ram_amount)
                     self.ram_locked += ram_amount
                     break
                 else:
