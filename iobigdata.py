@@ -1,5 +1,6 @@
 # I/O Big Data utils.
 import gc
+from multiprocessing.connection import wait
 from time import sleep
 from threading import Lock
 
@@ -50,7 +51,7 @@ class IOBigData(metaclass=Singleton):
 
         self.ram_pool = ram_pool_method
         #self.gas = gas  # TODO will be a polynomy.
-        self.modify_resources = modify_resources  # (min_memory_limit, max_memory_limit) -> memory_limit_updated
+        self.modify_resources = modify_resources  # {min_memory_limit, max_memory_limit} -> memory_limit_updated
 
         self.log = log
         self.ram_locked = 0
@@ -90,18 +91,29 @@ class IOBigData(metaclass=Singleton):
 
     # Gas manager methods.
     def __update_resources(self):
+        """
         if self.gas < sum(self.wait) and sum(self.wait) - self.gas < self.gas \
-            or self.gas >= sum(self.wait) and self.gas < self.ram_locked:  # TODO check.
+            or self.gas >= sum(self.wait) and self.gas < self.ram_locked:
 
             print(self.gas < sum(self.wait))
             print(sum(self.wait) - self.gas < self.gas)
             print(self.gas >= sum(self.wait)) 
 
             self.ram_pool = lambda: self.modify_resources((
-                    self.ram_pool + sum(self.wait) - self.gas,  # min resources.
-                    self.ram_pool + sum(self.wait) - self.gas  # max resources.
+                    self.ram_pool() + sum(self.wait) - self.gas,  # min resources.
+                    self.ram_pool() + sum(self.wait) - self.gas  # max resources.
             ))
-            self.gas += self.gas - sum(self.wait)
+            self.gas += self.gas - sum(self.wait)        
+        """
+
+        modify_formula = lambda m: self.ram_pool() + m(self.wait) *((-1) if len(self.wait) == 0 else 1)  # TODO check.
+
+        self.ram_pool = lambda: self.modify_resources(
+            {
+                "min": modify_formula(min),  # min resources.
+                "max": modify_formula(sum)   # max resources.
+            }
+        )
 
     def __push_wait_list(self, len: int):
         with self.wait_lock:

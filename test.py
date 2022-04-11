@@ -16,8 +16,6 @@ class NodeResourcesManagerSimulator:
         with self.lock:
             print('\n ei mai friend, yu want to change the ram, ok, i change it. ->  ', l, '\n')
             self.ram_pool = l
-
-    def get_resources(self):
         return self.ram_pool
 
 def p1():
@@ -40,8 +38,7 @@ def p3():
 nrms = NodeResourcesManagerSimulator()
 IOBigData(
     ram_pool_method = lambda: RAM_POOL,
-    modify_resources= lambda l: nrms.modify_resources(l),
-    get_resources= lambda: nrms.get_resources()
+    modify_resources= lambda l: nrms.modify_resources(l)['max']
 )
 
 Thread( target=p1 ).start()
