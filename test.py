@@ -20,17 +20,14 @@ class NodeResourcesManagerSimulator:
 
 def p1():
     with mem_manager(len=7):
-        sleep(6)
         print(1)
 
 def p2():
     with mem_manager(len=9):
-        sleep(3)
         print(2)
 
 def p3():
     with mem_manager(len=3):
-        sleep(3)
         print(3)
 
 # IOBigData(ram_pool_method= lambda: psutil.virtual_memory().total) Simulacion de uso de la librería en nodo.
@@ -42,7 +39,5 @@ IOBigData(
 )
 
 Thread( target=p1 ).start()
-sleep(1)
 Thread( target=p2 ).start()
-sleep(1)
 Thread( target=p3 ).start()

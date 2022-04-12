@@ -60,7 +60,7 @@ class IOBigData(metaclass=Singleton):
         self.wait = []
         self.wait_lock = Lock()
 
-        self.FREE_FACTOR = 0.01
+        self.FREE_FACTOR = 0
 
     # General methods.
 
@@ -113,8 +113,8 @@ class IOBigData(metaclass=Singleton):
 
         v = self.modify_resources(
             {
-                "min": modify_formula(min),  # min resources.
-                "max": modify_formula(sum)   # max resources.
+                "min": modify_formula(min) + self.FREE_FACTOR*self.ram_pool(),  # min resources.
+                "max": modify_formula(sum) + self.FREE_FACTOR*self.ram_pool()   # max resources.
             }
         )
         self.ram_pool = lambda: v
@@ -125,7 +125,7 @@ class IOBigData(metaclass=Singleton):
             if sum(self.wait) > self.get_ram_avaliable():
                 print('-> ', self.wait)
                 self.__update_resources(
-                    modify_formula = lambda m: self.ram_locked + m(self.wait) + self.FREE_FACTOR*self.ram_pool() # + self.gas * (X factor). TODO
+                    modify_formula = lambda m: self.ram_locked + m(self.wait) # + self.gas * (X factor). TODO
                 )
 
     def __pop_wait_list(self, l: int):
@@ -133,7 +133,7 @@ class IOBigData(metaclass=Singleton):
             self.wait.remove(l)
             if len(self.wait) == 0:
                 self.__update_resources(
-                    modify_formula = lambda m: self.ram_locked + self.FREE_FACTOR*self.ram_pool() # + self.gas * (X factor). TODO
+                    modify_formula = lambda m: self.ram_locked # + self.gas * (X factor). TODO
                 )
 
 
