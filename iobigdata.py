@@ -60,6 +60,8 @@ class IOBigData(metaclass=Singleton):
         self.wait = []
         self.wait_lock = Lock()
 
+        self.FREE_FACTOR = 0.01
+
     # General methods.
 
     def set_log(self, log = lambda message: print(message)) -> None:
@@ -71,10 +73,12 @@ class IOBigData(metaclass=Singleton):
         if size_bytes == 0:
             return "0B"
         size_name = ("B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB")
-        i = int(math.floor(math.log(size_bytes, 1024)))
-        p = math.pow(1024, i)
-        s = round(size_bytes / p, 2)
-        return "%s %s" % (s, size_name[i])
+        try:
+            i = int(math.floor(math.log(size_bytes, 1024)))
+            p = math.pow(1024, i)
+            s = round(size_bytes / p, 2)
+            return "%s %s" % (s, size_name[i])
+        except ValueError: return "%s %s" % (size_bytes, size_name[0])
 
     def __stats(self, message: str):
         with self.amount_lock:
@@ -83,13 +87,13 @@ class IOBigData(metaclass=Singleton):
             self.log('RAM LOCKED     -> '+ IOBigData.convert_size(self.ram_locked))
             self.log('RAM AVALIABLE  -> '+ IOBigData.convert_size(self.get_ram_avaliable()))
             self.log('RAM WAITING    -> '+ IOBigData.convert_size(sum(self.wait)))
-            #self.log('GAS            -> '+ str(self.gas))
+            #self.log('GAS            -> '+ str(self.gas))  TODO
             self.log('-----------------------------------------\n')
 
 
 
     # Gas manager methods.
-    def __update_resources(self):
+    def __update_resources(self, modify_formula):
         """
         if self.gas < sum(self.wait) and sum(self.wait) - self.gas < self.gas \
             or self.gas >= sum(self.wait) and self.gas < self.ram_locked:
@@ -105,24 +109,32 @@ class IOBigData(metaclass=Singleton):
             self.gas += self.gas - sum(self.wait)        
         """
 
-        modify_formula = lambda m: self.ram_pool() + m(self.wait) *((-1) if len(self.wait) == 0 else 1)  # TODO check.
+        print('Updating resources -> ', self.ram_locked, self.wait)
 
-        self.ram_pool = lambda: self.modify_resources(
+        v = self.modify_resources(
             {
                 "min": modify_formula(min),  # min resources.
                 "max": modify_formula(sum)   # max resources.
             }
         )
+        self.ram_pool = lambda: v
 
-    def __push_wait_list(self, len: int):
+    def __push_wait_list(self, l: int):
         with self.wait_lock:
-            self.wait.append(len)
-            self.__update_resources()
+            self.wait.append(l)
+            if sum(self.wait) > self.get_ram_avaliable():
+                print('-> ', self.wait)
+                self.__update_resources(
+                    modify_formula = lambda m: self.ram_locked + m(self.wait) + self.FREE_FACTOR*self.ram_pool() # + self.gas * (X factor). TODO
+                )
 
-    def __pop_wait_list(self, len: int):
+    def __pop_wait_list(self, l: int):
         with self.wait_lock:
-            self.wait.remove(len)
-            self.__update_resources()
+            self.wait.remove(l)
+            if len(self.wait) == 0:
+                self.__update_resources(
+                    modify_formula = lambda m: self.ram_locked + self.FREE_FACTOR*self.ram_pool() # + self.gas * (X factor). TODO
+                )
 
 
     # Manage resources methods.
@@ -132,20 +144,20 @@ class IOBigData(metaclass=Singleton):
 
     def lock_ram(self, ram_amount: int, wait: bool = True):
         self.__stats('want lock ' + IOBigData.convert_size(ram_amount))
-        self.__push_wait_list(len=ram_amount)
+        self.__push_wait_list(l=ram_amount)
         while True:
             self.__stats('go to lock ' + IOBigData.convert_size(ram_amount))
             if wait:
                 self.wait_to_prevent_kill(len = ram_amount)
 
             elif not self.prevent_kill(len = ram_amount):
-                self.__pop_wait_list(len=ram_amount)
+                self.__pop_wait_list(l=ram_amount)
                 raise Exception
 
             with self.amount_lock:
                 if self.get_ram_avaliable() > ram_amount:
-                    self.__pop_wait_list(len=ram_amount)
                     self.ram_locked += ram_amount
+                    self.__pop_wait_list(l=ram_amount)
                     break
                 else:
                     continue
