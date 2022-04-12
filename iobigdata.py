@@ -45,8 +45,7 @@ class IOBigData(metaclass=Singleton):
             log = lambda message: print(message),
             ram_pool_method = None,
             gas: int = 0,
-            modify_resources = lambda l: l,
-            get_resources = lambda: None,
+            modify_resources = lambda l: l
         ) -> None:
 
         self.ram_pool = ram_pool_method
