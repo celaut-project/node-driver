@@ -122,8 +122,9 @@ class IOBigData(metaclass=Singleton):
     def __push_wait_list(self, l: int):
         with self.wait_lock:
             self.wait.append(l)
-            if sum(self.wait) > self.get_ram_avaliable():
-                print('-> ', self.wait)
+        if sum(self.wait) > self.get_ram_avaliable():
+            print('-> ', self.wait)
+            with self.amount_lock:
                 self.__update_resources(
                     modify_formula = lambda m: self.ram_locked + m(self.wait) # + self.gas * (X factor). TODO
                 )
@@ -131,7 +132,8 @@ class IOBigData(metaclass=Singleton):
     def __pop_wait_list(self, l: int):
         with self.wait_lock:
             self.wait.remove(l)
-            if len(self.wait) == 0:
+        if len(self.wait) == 0:
+            with self.amount_lock:
                 self.__update_resources(
                     modify_formula = lambda m: self.ram_locked # + self.gas * (X factor). TODO
                 )
