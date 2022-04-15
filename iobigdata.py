@@ -159,10 +159,10 @@ class IOBigData(metaclass=Singleton):
             with self.amount_lock:
                 if self.get_ram_avaliable() > ram_amount:
                     self.ram_locked += ram_amount
-                    self.__pop_wait_list(l=ram_amount)
-                    break
                 else:
                     continue
+            self.__pop_wait_list(l=ram_amount)
+            break
         self.__stats('locked')
 
     def unlock_ram(self, ram_amount: int):

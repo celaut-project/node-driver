@@ -24,6 +24,7 @@ def p1():
 
 def p2():
     with mem_manager(len=9):
+        sleep(7)
         print(2)
 
 def p3():
@@ -39,5 +40,7 @@ IOBigData(
 )
 
 Thread( target=p1 ).start()
+sleep(2)
 Thread( target=p2 ).start()
+sleep(2)
 Thread( target=p3 ).start()
