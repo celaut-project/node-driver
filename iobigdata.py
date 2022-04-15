@@ -153,7 +153,7 @@ class IOBigData(metaclass=Singleton):
                     continue
             self.__pop_wait_list(l=ram_amount)
             break
-        self.__stats('locked' + IOBigData.convert_size(ram_amount))
+        self.__stats('locked ' + IOBigData.convert_size(ram_amount))
 
     def unlock_ram(self, ram_amount: int):
         with self.amount_lock:
@@ -166,7 +166,7 @@ class IOBigData(metaclass=Singleton):
                 self.__update_resources(
                     modify_formula = lambda m: self.ram_locked # + self.gas * (X factor). TODO
                 )
-        self.__stats('unlocked' + IOBigData.convert_size(ram_amount))
+        self.__stats('unlocked ' + IOBigData.convert_size(ram_amount))
 
     def prevent_kill(self, len: int) -> bool:
         with self.amount_lock:

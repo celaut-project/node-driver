@@ -18,6 +18,12 @@ class NodeResourcesManagerSimulator:
             self.ram_pool = l['max']
         return self.ram_pool
 
+
+def p0():
+    with mem_manager(len= RAM_POOL):
+        while True:
+            sleep(1)
+
 def p1():
     with mem_manager(len=700):
         print(1)
@@ -38,7 +44,8 @@ IOBigData(
     ram_pool_method = lambda: RAM_POOL,
     modify_resources= lambda l: nrms.modify_resources(l)
 )
-
+Thread( target=p0 ).start()
+sleep(2)
 Thread( target=p1 ).start()
 sleep(2)
 Thread( target=p2 ).start()
