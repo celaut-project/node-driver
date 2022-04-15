@@ -45,7 +45,7 @@ class IOBigData(metaclass=Singleton):
             log = lambda message: print(message),
             ram_pool_method = None,
             gas: int = 0,
-            modify_resources = lambda l: l
+            modify_resources = None
         ) -> None:
 
         self.ram_pool = ram_pool_method
@@ -92,28 +92,29 @@ class IOBigData(metaclass=Singleton):
 
     # Gas manager methods.
     def __update_resources(self, modify_formula):
-        """
-        if self.gas < sum(self.wait) and sum(self.wait) - self.gas < self.gas \
-            or self.gas >= sum(self.wait) and self.gas < self.ram_locked:
+        if self.modify_resources:
+            """
+            if self.gas < sum(self.wait) and sum(self.wait) - self.gas < self.gas \
+                or self.gas >= sum(self.wait) and self.gas < self.ram_locked:
 
-            print(self.gas < sum(self.wait))
-            print(sum(self.wait) - self.gas < self.gas)
-            print(self.gas >= sum(self.wait)) 
+                print(self.gas < sum(self.wait))
+                print(sum(self.wait) - self.gas < self.gas)
+                print(self.gas >= sum(self.wait)) 
 
-            self.ram_pool = lambda: self.modify_resources((
-                    self.ram_pool() + sum(self.wait) - self.gas,  # min resources.
-                    self.ram_pool() + sum(self.wait) - self.gas  # max resources.
-            ))
-            self.gas += self.gas - sum(self.wait)        
-        """
+                self.ram_pool = lambda: self.modify_resources((
+                        self.ram_pool() + sum(self.wait) - self.gas,  # min resources.
+                        self.ram_pool() + sum(self.wait) - self.gas  # max resources.
+                ))
+                self.gas += self.gas - sum(self.wait)        
+            """
 
-        v = self.modify_resources(
-            {
-                "min": modify_formula(min),  # min resources.
-                "max": modify_formula(sum)   # max resources.
-            }
-        )
-        self.ram_pool = lambda: v
+            v = self.modify_resources(
+                {
+                    "min": modify_formula(min),  # min resources.
+                    "max": modify_formula(sum)   # max resources.
+                }
+            )
+            self.ram_pool = lambda: v
 
     def __push_wait_list(self, l: int):
         with self.wait_lock:
