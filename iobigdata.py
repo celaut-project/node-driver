@@ -110,8 +110,6 @@ class IOBigData(metaclass=Singleton):
             self.gas += self.gas - sum(self.wait)        
         """
 
-        print('Updating resources -> ', self.ram_locked, self.wait)
-
         v = self.modify_resources(
             {
                 "min": modify_formula(min),  # min resources.
@@ -124,7 +122,6 @@ class IOBigData(metaclass=Singleton):
         with self.wait_lock:
             self.wait.append(l)
         if sum(self.wait) > self.get_ram_avaliable():
-            print('-> ', self.wait)
             with self.amount_lock:
                 self.__update_resources(
                     modify_formula = lambda m: self.ram_locked + m(self.wait) # + self.gas * (X factor). TODO
@@ -159,7 +156,7 @@ class IOBigData(metaclass=Singleton):
                     continue
             self.__pop_wait_list(l=ram_amount)
             break
-        self.__stats('locked')
+        self.__stats('locked' + IOBigData.convert_size(ram_amount))
 
     def unlock_ram(self, ram_amount: int):
         with self.amount_lock:
@@ -172,7 +169,7 @@ class IOBigData(metaclass=Singleton):
                 self.__update_resources(
                     modify_formula = lambda m: max(self.ram_locked, self.min_pool()) # + self.gas * (X factor). TODO
                 )
-        self.__stats('unlocked')
+        self.__stats('unlocked' + IOBigData.convert_size(ram_amount))
 
     def prevent_kill(self, len: int) -> bool:
         with self.amount_lock:
