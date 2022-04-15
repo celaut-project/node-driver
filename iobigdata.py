@@ -60,7 +60,7 @@ class IOBigData(metaclass=Singleton):
         self.wait = []
         self.wait_lock = Lock()
 
-        self.FREE_FACTOR = 0
+        self.FREE_FACTOR = 0.1
 
     # General methods.
 
@@ -132,11 +132,6 @@ class IOBigData(metaclass=Singleton):
     def __pop_wait_list(self, l: int):
         with self.wait_lock:
             self.wait.remove(l)
-        if len(self.wait) == 0:
-            with self.amount_lock:
-                self.__update_resources(
-                    modify_formula = lambda m: self.ram_locked # + self.gas * (X factor). TODO
-                )
 
 
     # Manage resources methods.
@@ -171,6 +166,11 @@ class IOBigData(metaclass=Singleton):
                 self.ram_locked -= ram_amount
             else:
                 self.ram_locked = 0
+
+            if len(self.wait) == 0:
+                self.__update_resources(
+                    modify_formula = lambda m: self.ram_locked # + self.gas * (X factor). TODO
+                )
         self.__stats('unlocked')
 
     def prevent_kill(self, len: int) -> bool:
