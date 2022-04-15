@@ -60,9 +60,6 @@ class IOBigData(metaclass=Singleton):
         self.wait = []
         self.wait_lock = Lock()
 
-        mp = self.ram_pool()
-        self.min_pool = lambda: mp
-
     # General methods.
 
     def set_log(self, log = lambda message: print(message)) -> None:
@@ -167,7 +164,7 @@ class IOBigData(metaclass=Singleton):
 
             if len(self.wait) == 0:
                 self.__update_resources(
-                    modify_formula = lambda m: max(self.ram_locked, self.min_pool()) # + self.gas * (X factor). TODO
+                    modify_formula = lambda m: self.ram_locked # + self.gas * (X factor). TODO
                 )
         self.__stats('unlocked' + IOBigData.convert_size(ram_amount))
 
