@@ -8,7 +8,7 @@ setup(
     author='Josemi Avellana',
     author_email='josemi.bnf@gmail.com',
 
-    py_modules=['iobigdata'],
+    py_modules=['iobigdata', 'celaut_pb2'],
     install_requires=[
     ],
     package_dir={"": "src"},
