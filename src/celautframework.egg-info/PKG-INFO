@@ -7,6 +7,7 @@ Author: Josemi Avellana
 Author-email: josemi.bnf@gmail.com
 License: UNKNOWN
 Platform: UNKNOWN
+Requires-Python: >=3.6
 License-File: LICENSE
 
 UNKNOWN
