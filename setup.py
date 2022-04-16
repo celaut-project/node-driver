@@ -1,7 +1,7 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
-    name='acelautframework',
+    name='celautframework',
     version='__dev__',
 
     url='https://github.com/jossemii/GRPCBigBuffer_Client.git',
@@ -11,4 +11,6 @@ setup(
     py_modules=['iobigdata'],
     install_requires=[
     ],
+    package_dir={"": "src"},
+    packages=find_packages(where="src"),
 )
