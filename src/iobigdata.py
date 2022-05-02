@@ -112,8 +112,8 @@ class IOBigData(metaclass=Singleton):
 
             v = self.modify_resources(
                 {
-                    "min": modify_formula(min),  # min resources.
-                    "max": modify_formula(sum)   # max resources.
+                    "min": int(modify_formula(min)),  # min resources.
+                    "max": int(modify_formula(sum))   # max resources.
                 }
             )
             self.ram_pool = lambda: v.mem_limit
