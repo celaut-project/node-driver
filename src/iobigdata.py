@@ -114,7 +114,7 @@ class IOBigData(metaclass=Singleton):
                     "max": modify_formula(sum)   # max resources.
                 }
             )
-            self.ram_pool = lambda: v
+            self.ram_pool = lambda: v.mem_limit
 
     def __push_wait_list(self, l: int):
         with self.wait_lock:
