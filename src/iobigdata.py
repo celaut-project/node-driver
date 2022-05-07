@@ -147,7 +147,7 @@ class IOBigData(metaclass=Singleton):
                 raise Exception
 
             with self.amount_lock:
-                if self.get_ram_avaliable() > ram_amount:
+                if self.get_ram_avaliable() >= ram_amount:
                     self.ram_locked += ram_amount
                 else:
                     continue
@@ -170,7 +170,7 @@ class IOBigData(metaclass=Singleton):
 
     def prevent_kill(self, len: int) -> bool:
         with self.amount_lock:
-            b = self.get_ram_avaliable() > len
+            b = self.get_ram_avaliable() >= len
         return b
 
     def wait_to_prevent_kill(self, len: int) -> None:
