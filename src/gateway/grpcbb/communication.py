@@ -1,5 +1,5 @@
-def modify_resources_grpcbb(i: dict) -> api_pb2.celaut__pb2.Sysresources:
-    return next(
+def modify_resources_grpcbb(i: dict) -> Tuple[api_pb2.celaut__pb2.Sysresources, int]:
+    output: gateway_pb2.ModifyServiceSystemResourcesOutput = next(
         client_grpc(
             method = gateway_pb2_grpc.GatewayStub(
                         grpc.insecure_channel(ENVS['GATEWAY_MAIN_DIR'])
@@ -13,6 +13,7 @@ def modify_resources_grpcbb(i: dict) -> api_pb2.celaut__pb2.Sysresources:
                 ),
             ),
             partitions_message_mode_parser=True,
-            indices_parser = api_pb2.celaut__pb2.Sysresources,
+            indices_parser = gateway_pb2.ModifyServiceSystemResourcesOutput,
         )
     )
+    return output.sysreq, to_gas_amount(output.gas)
