@@ -15,7 +15,7 @@ from start import DIR, LOGGER, SHA3_256, SHA3_256_ID, get_grpc_uri
 #  ya que las instancias quedarían zombies en la red hasta que el clasificador
 #  fuera eliminado.
 
-class SolverInstance(object):
+class ServiceInstance(object):
     def __init__(self, stub, token):
         self.stub = stub
         self.token = token
@@ -83,24 +83,26 @@ class SolverInstance(object):
                 sleep(1)
 
 
-class SolverConfig(object):
-    def __init__(self, solver_with_config: solvers_dataset_pb2.SolverWithConfig, solver_hash: str):
+class ServiceConfig(object):
+    def __init__(self, service_with_config: solvers_dataset_pb2.SolverWithConfig, service_hash: str, stub_class):
 
-        self.solver_hash = solver_hash  # SHA3-256 hash value that identifies the service definition on memory (if it's not complete is the hash of the incomplete definition).
+        self.stub_class = stub_class
+
+        self.solver_hash = service_hash  # SHA3-256 hash value that identifies the service definition on memory (if it's not complete is the hash of the incomplete definition).
         try:
-            self.hashes = solver_with_config.meta.hashtag.hash # list of hashes that the service's metadata has.
+            self.hashes = service_with_config.meta.hashtag.hash # list of hashes that the service's metadata has.
         except:  # if there are no hashes in the metadata
-            if solver_with_config.meta.complete: # if the service definition say that it's complete, the solver hash can be used.
+            if service_with_config.meta.complete: # if the service definition say that it's complete, the solver hash can be used.
                 self.hashes = [celaut.Any.HashTag.hash(
                     type = SHA3_256_ID,
-                    value = bytes.fromhex(solver_hash)
+                    value = bytes.fromhex(service_hash)
                 )]
             else:
                 self.hashes = []
 
         # Service configuration.
         self.config = celaut.Configuration()
-        self.config.enviroment_variables.update(solver_with_config.enviroment_variables)
+        self.config.enviroment_variables.update(service_with_config.enviroment_variables)
 
         # Service's instances.
         self.instances = []  # se da uso de una pila para que el 'maintainer' detecte las instancias que quedan en desuso,
@@ -122,7 +124,28 @@ class SolverConfig(object):
             Dir(DIR+'__solvers__/'+self.solver_hash+'/p2')
         )
 
-    def launch_instance(self, gateway_stub) -> SolverInstance:
+    def service_extended_from_disk(self):
+        config = True
+        for hash in self.hashes:
+            if config:  # Solo hace falta enviar la configuracion en el primer paquete.
+                config = False
+                yield gateway_pb2.HashWithConfig(
+                    hash = hash,
+                    config = self.config,
+                    min_sysreq = gateway_pb2.celaut__pb2.Sysresources(
+                        mem_limit = 80*pow(10, 6)
+                    )
+                )
+            yield hash
+        while True:
+            if not os.path.isfile(DIR + 'services.zip'):
+                yield (gateway_pb2.ServiceWithMeta, Dir(DIR + 'regresion.service'))
+                break
+            else:
+                sleep(1)
+                continue
+
+    def launch_instance(self, gateway_stub) -> ServiceInstance:
         LOGGER('    launching new instance for solver ' + self.solver_hash)
         while True:
             try:
@@ -146,8 +169,8 @@ class SolverConfig(object):
             raise e
         LOGGER('THE URI FOR THE SOLVER ' + self.solver_hash + ' is--> ' + str(uri))
 
-        return SolverInstance(
-            stub = api_pb2_grpc.SolverStub(
+        return ServiceInstance(
+            stub = self.stub_class(
                     grpc.insecure_channel(
                         uri.ip + ':' + str(uri.port)
                     )
@@ -155,11 +178,11 @@ class SolverConfig(object):
             token = instance.token
         )
 
-    def add_instance(self, instance: SolverInstance, deep=False):
+    def add_instance(self, instance: ServiceInstance, deep=False):
         LOGGER('Add instance ' + str(instance))
         self.instances.append(instance) if not deep else self.instances.insert(0, instance)
 
-    def get_instance(self, deep=False) -> SolverInstance:
+    def get_instance(self, deep=False) -> ServiceInstance:
         LOGGER('Get an instance of. deep ' + str(deep))
         LOGGER('The solver ' + self.hashes[0].value.hex() + ' has ' + str(len(self.instances)) + ' instances.')
         try:
@@ -168,7 +191,7 @@ class SolverConfig(object):
             LOGGER('    list empty --> ' + str(self.instances))
             raise IndexError
     
-    def get_solver_with_config(self) -> solvers_dataset_pb2.SolverWithConfig:
+    def get_service_with_config(self) -> solvers_dataset_pb2.SolverWithConfig:
         solver_with_meta = api_pb2.ServiceWithMeta()
         solver_with_meta.ParseFromString(
             read_file(DIR + '__solvers__/' + self.solver_hash + '/p1')
@@ -200,74 +223,6 @@ class Session(metaclass = Singleton):
         self.gateway_stub = gateway_pb2_grpc.GatewayStub(grpc.insecure_channel(self.GATEWAY_MAIN_DIR))
         self.lock = Lock()
         Thread(target=self.maintenance, name='Maintainer').start()
-
-    def cnf(self, cnf: api_pb2.Cnf, solver_config_id: str, timeout=None):
-        LOGGER(str(timeout) + 'cnf want solvers lock' + str(self.lock.locked()))
-        self.lock.acquire()
-
-        solver_config = self.solvers[solver_config_id]
-        try:
-            instance = solver_config.get_instance()  # use the list like a stack.
-            self.lock.release()
-        except IndexError:
-            # Si no hay ninguna instancia disponible, deja el lock y solicita al nodo una nueva.
-            self.lock.release()
-            instance = solver_config.launch_instance(self.gateway_stub)
-
-        instance.mark_time()
-        try:
-            # Tiene en cuenta el tiempo de respuesta y deserializacion del buffer.
-            start_time = time_now()
-            LOGGER('    resolving cnf on ' + str(solver_config_id))
-            interpretation = next(client_grpc(
-                method = instance.stub.Solve,
-                input = cnf,
-                indices_parser = api_pb2.Interpretation,
-                partitions_message_mode_parser = True,
-                indices_serializer = api_pb2.Cnf,
-                timeout = timeout
-            ))
-            time = time_now() - start_time
-            LOGGER(str(time) + '    resolved cnf on ' + str(solver_config_id))
-            # Si hemos obtenido una respuesta, en caso de que nos comunique que hay una interpretacion,
-            # será satisfactible. Si no nos da interpretacion asumimos que lo identifica como insatisfactible.
-            # Si ocurre un error (menos por superar el timeout) se deja la interpretación vacia (None) para,
-            # tras asegurar la instancia, lanzar una excepción.
-            instance.reset_timers()
-            LOGGER('INTERPRETACION --> ' + str(interpretation.variable))
-        except grpc.RpcError as e:
-            if int(e.code().value[0]) == 4:  # https://github.com/avinassh/grpc-errors/blob/master/python/client.py
-                LOGGER('TIME OUT NO SUPERADO.')
-                instance.timeout_passed()
-                interpretation, time = api_pb2.Interpretation(), timeout
-                interpretation.satisfiable = False
-            else:
-                LOGGER('GRPC ERROR.' + str(e))
-                instance.error()
-                interpretation, time = None, timeout
-        except Exception as e:
-            LOGGER('ERROR ON CNF ' + str(e))
-            instance.error()
-            interpretation, time = None, timeout
-
-        # Si la instancia se encuentra en estado zombie
-        # la detiene, en caso contrario la introduce
-        #  de nuevo en su cola correspondiente.
-        if instance.is_zombie(
-                self.SOLVER_PASS_TIMEOUT_TIMES,
-                self.TRAIN_SOLVERS_TIMEOUT,
-                self.SOLVER_FAILED_ATTEMPTS
-        ):
-            instance.stop(self.gateway_stub)
-        else:
-            self.lock.acquire()
-            solver_config.add_instance(instance)
-            self.lock.release()
-
-        if interpretation:
-            return interpretation, time
-        else:
-            raise Exception
 
     def maintenance(self):
         while True:
@@ -323,23 +278,29 @@ class Session(metaclass = Singleton):
                     solver_config.add_instance(instance, deep = True)
                     self.lock.release()
 
-    def add_solver(self, solver_with_config: solvers_dataset_pb2.SolverWithConfig, solver_config_id: str, solver_hash: str):
+    def add_service(self, 
+            service_with_config: solvers_dataset_pb2.ServiceWithConfig, 
+            solver_config_id: str, 
+            solver_hash: str,
+            stub_class
+        ):
         if solver_config_id != SHA3_256(
-            value = solver_with_config.SerializeToString() # This service not touch metadata, so it can use the hash for id.
+            value = service_with_config.SerializeToString() # This service not touch metadata, so it can use the hash for id.
         ).hex():
-            LOGGER('Solver config not valid ', solver_with_config, solver_config_id)
-            raise Exception('Solver config not valid ', solver_with_config, solver_config_id)
+            LOGGER('Solver config not valid ', service_with_config, solver_config_id)
+            raise Exception('Solver config not valid ', service_with_config, solver_config_id)
 
         self.lock.acquire()
         self.solvers.update({
-            solver_config_id : SolverConfig(
-                solver_with_config = solver_with_config,
-                solver_hash = solver_hash
+            solver_config_id : ServiceConfig(
+                service_with_config = service_with_config,
+                service_hash = solver_hash,
+                stub_class = stub_class
             )
         })
         self.lock.release()
         try:
-            LOGGER('ADDED NEW SOLVER ' + str(solver_config_id) + ' \ndef_ids -> ' +  str(solver_with_config.meta.hashtag.hash[0].value.hex()))
+            LOGGER('ADDED NEW SOLVER ' + str(solver_config_id) + ' \ndef_ids -> ' +  str(service_with_config.meta.hashtag.hash[0].value.hex()))
         except: LOGGER('ADDED NEW SOLVER ' + str(solver_config_id))
 
     def get_solver_with_config(self, solver_config_id: str) -> solvers_dataset_pb2.SolverWithConfig:
