@@ -1,3 +1,5 @@
+import socket
+from tabnanny import check
 from time import sleep, time as time_now
 from datetime import datetime, timedelta
 from threading import Thread, Lock
@@ -16,13 +18,14 @@ from start import DIR, LOGGER, SHA3_256, SHA3_256_ID, get_grpc_uri
 #  fuera eliminado.
 
 class ServiceInstance(object):
-    def __init__(self, stub, token):
+    def __init__(self, stub, token, check_if_is_alive):
         self.stub = stub
         self.token = token
         self.creation_datetime = datetime.now()
         self.use_datetime = datetime.now()
         self.pass_timeout = 0
         self.failed_attempts = 0
+        self.check_if_is_alive = check_if_is_alive
 
     def error(self):
         sleep(1) # Wait if the solver is loading.
@@ -49,23 +52,6 @@ class ServiceInstance(object):
     def mark_time(self):
         self.use_datetime = datetime.now()
 
-    def check_if_is_alive(self, timeout) -> bool:
-        LOGGER('Check if instance ' + str(self.token) + ' is alive.')
-        cnf = api_pb2.Cnf()
-        clause = api_pb2.Clause()
-        clause.literal.append(1)
-        cnf.clause.append(clause)
-        try:
-            next(client_grpc(
-                method = self.stub.Solve,
-                input = cnf,
-                indices_serializer = api_pb2.Cnf,
-                timeout = timeout
-            ))
-            return True
-        except (TimeoutError, grpc.RpcError):
-            return False
-
     def stop(self, gateway_stub):
         LOGGER('Stops this instance with token ' + str(self.token))
         while True:
@@ -82,9 +68,18 @@ class ServiceInstance(object):
                 LOGGER('GRPC ERROR STOPPING SOLVER ' + str(e))
                 sleep(1)
 
+def is_open(timeout, ip, port):
+    try:
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.settimeout(timeout)
+        sock.connect((ip, port))
+        sock.close()
+        return True
+    except Exception:
+        return False
 
 class ServiceConfig(object):
-    def __init__(self, service_with_config: solvers_dataset_pb2.SolverWithConfig, service_hash: str, stub_class):
+    def __init__(self, service_with_config: solvers_dataset_pb2.SolverWithConfig, service_hash: str, stub_class, check_if_is_alive = None):
 
         self.stub_class = stub_class
 
@@ -107,6 +102,8 @@ class ServiceConfig(object):
         # Service's instances.
         self.instances = []  # se da uso de una pila para que el 'maintainer' detecte las instancias que quedan en desuso,
         #  ya que quedarán estancadas al final de la pila.
+
+        self.check_if_is_alive = check_if_is_alive
 
     def service_extended(self):
         config = True
@@ -175,7 +172,9 @@ class ServiceConfig(object):
                         uri.ip + ':' + str(uri.port)
                     )
             ),
-            token = instance.token
+            token = instance.token,
+            check_if_is_alive = self.check_if_is_alive if self.check_if_is_alive \
+                                    else lambda timeout: is_open(timeout=timeout, ip=uri.ip, port=uri.port)
         )
 
     def add_instance(self, instance: ServiceInstance, deep=False):
