@@ -3,7 +3,7 @@ from time import sleep
 from datetime import datetime, timedelta
 from threading import Thread, Lock
 
-from utils.lambdas import LOGGER, SHA3_256_ID, STATIC_SERVICE_INSTANCES, DYNAMIC_SERVICE_INSTANCES
+from utils.lambdas import LOGGER, SHA3_256_ID, STATIC_SERVICE_INSTANCES, DYNAMIC_SERVICE_INSTANCES, SHA3_256
 from utils.read_file import read_file
 from utils.singleton import Singleton
 from utils.get_grpc_uri import get_grpc_uri
@@ -217,7 +217,7 @@ class DependencyManager(metaclass = Singleton):
                     self.lock.release()
 
     def add_service(self, 
-            service_with_config: solvers_dataset_pb2.ServiceWithConfig, 
+            service_with_config: gateway_pb2.ServiceWithConfig,
             solver_config_id: str, 
             solver_hash: str,
             stub_class
@@ -241,5 +241,5 @@ class DependencyManager(metaclass = Singleton):
             LOGGER('ADDED NEW SOLVER ' + str(solver_config_id) + ' \ndef_ids -> ' +  str(service_with_config.meta.hashtag.hash[0].value.hex()))
         except: LOGGER('ADDED NEW SOLVER ' + str(solver_config_id))
 
-    def get_solver_with_config(self, solver_config_id: str) -> solvers_dataset_pb2.SolverWithConfig:
+    def get_solver_with_config(self, solver_config_id: str) -> gateway_pb2.SolverWithConfig:
         return self.solvers[solver_config_id].get_solver_with_config()
