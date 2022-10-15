@@ -1,14 +1,13 @@
 import socket
-from tabnanny import check
-from time import sleep, time as time_now
+import os
+from time import sleep
 from datetime import datetime, timedelta
 from threading import Thread, Lock
-from gateway_pb2_grpcbf import StartService_input_partitions, StartService_input
 from utils import read_file
-from grpcbigbuffer import Dir, client_grpc
-import grpc
 
 import api_pb2, api_pb2_grpc, gateway_pb2, gateway_pb2_grpc, solvers_dataset_pb2, celaut_pb2 as celaut
+
+from gateway.grpcbb.communication import generate_gateway_stub, stop, service_extended, service_extended_from_disk
 from singleton import Singleton
 from start import DIR, LOGGER, SHA3_256, SHA3_256_ID, get_grpc_uri
 
@@ -53,20 +52,7 @@ class ServiceInstance(object):
         self.use_datetime = datetime.now()
 
     def stop(self, gateway_stub):
-        LOGGER('Stops this instance with token ' + str(self.token))
-        while True:
-            try:
-                next(client_grpc(
-                    method = gateway_stub.StopService,
-                    input = gateway_pb2.TokenMessage(
-                                token = self.token
-                            ),
-                    indices_serializer = gateway_pb2.TokenMessage
-                ))
-                break
-            except grpc.RpcError as e:
-                LOGGER('GRPC ERROR STOPPING SOLVER ' + str(e))
-                sleep(1)
+        stop(gateway_stub=gateway_stub, token=self.token)
 
 def is_open(timeout, ip, port):
     try:
@@ -105,78 +91,6 @@ class ServiceConfig(object):
 
         self.check_if_is_alive = check_if_is_alive
 
-    def service_extended(self):
-        config = True
-        for hash in self.hashes:
-            if config:  # Solo hace falta enviar la configuracion en el primer paquete.
-                config = False
-                yield gateway_pb2.HashWithConfig(
-                    hash = hash,
-                    config = self.config
-                )
-            yield hash
-        yield ( 
-            gateway_pb2.ServiceWithMeta,
-            Dir(DIR+'__solvers__/'+self.solver_hash+'/p1'),
-            Dir(DIR+'__solvers__/'+self.solver_hash+'/p2')
-        )
-
-    def service_extended_from_disk(self):
-        config = True
-        for hash in self.hashes:
-            if config:  # Solo hace falta enviar la configuracion en el primer paquete.
-                config = False
-                yield gateway_pb2.HashWithConfig(
-                    hash = hash,
-                    config = self.config,
-                    min_sysreq = gateway_pb2.celaut__pb2.Sysresources(
-                        mem_limit = 80*pow(10, 6)
-                    )
-                )
-            yield hash
-        while True:
-            if not os.path.isfile(DIR + 'services.zip'):
-                yield (gateway_pb2.ServiceWithMeta, Dir(DIR + 'regresion.service'))
-                break
-            else:
-                sleep(1)
-                continue
-
-    def launch_instance(self, gateway_stub) -> ServiceInstance:
-        LOGGER('    launching new instance for solver ' + self.solver_hash)
-        while True:
-            try:
-                instance = next(client_grpc(
-                    method = gateway_stub.StartService,
-                    input = self.service_extended(),
-                    indices_parser = gateway_pb2.Instance,
-                    partitions_message_mode_parser=True,
-                    indices_serializer = StartService_input,
-                    partitions_serializer = StartService_input_partitions
-                ))
-                break
-            except grpc.RpcError as e:
-                LOGGER('GRPC ERROR LAUNCHING INSTANCE. ' + str(e))
-                sleep(1)
-
-        try:
-            uri = get_grpc_uri(instance.instance)
-        except Exception as e:
-            LOGGER(str(e))
-            raise e
-        LOGGER('THE URI FOR THE SOLVER ' + self.solver_hash + ' is--> ' + str(uri))
-
-        return ServiceInstance(
-            stub = self.stub_class(
-                    grpc.insecure_channel(
-                        uri.ip + ':' + str(uri.port)
-                    )
-            ),
-            token = instance.token,
-            check_if_is_alive = self.check_if_is_alive if self.check_if_is_alive \
-                                    else lambda timeout: is_open(timeout=timeout, ip=uri.ip, port=uri.port)
-        )
-
     def add_instance(self, instance: ServiceInstance, deep=False):
         LOGGER('Add instance ' + str(instance))
         self.instances.append(instance) if not deep else self.instances.insert(0, instance)
@@ -204,8 +118,44 @@ class ServiceConfig(object):
                     config = self.config
                 )
 
+    def service_extended(self):
+        for b in service_extended(
+                hashes=self.hashes,
+                config=self.config,
+                solver_hash=self.solver_hash
+        ):
+            yield b
 
-class Session(metaclass = Singleton):
+
+    def service_extended_from_disk(self):
+        for b in service_extended_from_disk(
+            hashes=self.hashes,
+            config=self.config
+        ):
+            yield b
+
+
+    def launch_service(self, gateway_stub):
+        instance = launch_service(
+            gateway_stub=gateway_stub,
+            solver_hash=self.solver_hash
+        )
+
+        try:
+            uri = get_grpc_uri(instance.instance)
+        except Exception as e:
+            LOGGER(str(e))
+            raise e
+        LOGGER('THE URI FOR THE SOLVER ' + self.solver_hash + ' is--> ' + str(uri))
+
+        return ServiceInstance(
+            stub=generate_instance_stub(self.stub_class, uri),
+            token=instance.token,
+            check_if_is_alive=self.check_if_is_alive if self.check_if_is_alive \
+                else lambda timeout: is_open(timeout=timeout, ip=uri.ip, port=uri.port)
+        )
+
+class DependencyManager(metaclass = Singleton):
 
     def __init__(self, ENVS: dict):
 
@@ -219,7 +169,7 @@ class Session(metaclass = Singleton):
 
         LOGGER('INIT SOLVE SESSION ....')
         self.solvers = {}
-        self.gateway_stub = gateway_pb2_grpc.GatewayStub(grpc.insecure_channel(self.GATEWAY_MAIN_DIR))
+        self.gateway_stub = generate_gateway_stub(self.GATEWAY_MAIN_DIR)
         self.lock = Lock()
         Thread(target=self.maintenance, name='Maintainer').start()
 
