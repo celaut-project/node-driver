@@ -1,15 +1,17 @@
 import socket
-import os
 from time import sleep
 from datetime import datetime, timedelta
 from threading import Thread, Lock
-from utils import read_file
 
-import api_pb2, api_pb2_grpc, gateway_pb2, gateway_pb2_grpc, solvers_dataset_pb2, celaut_pb2 as celaut
+from utils.lambdas import LOGGER, SHA3_256_ID, STATIC_SERVICE_INSTANCES, DYNAMIC_SERVICE_INSTANCES
+from utils.read_file import read_file
+from utils.singleton import Singleton
+from utils.get_grpc_uri import get_grpc_uri
 
-from gateway.grpcbb.communication import generate_gateway_stub, stop, service_extended, service_extended_from_disk
-from singleton import Singleton
-from start import DIR, LOGGER, SHA3_256, SHA3_256_ID, get_grpc_uri
+from protos import celaut_pb2 as celaut
+
+from gateway.communication import generate_gateway_stub, stop, launch_instance, generate_instance_stub
+from gateway.protos import gateway_pb2
 
 # Si se toma una instancia, se debe de asegurar que, o bien se agrega a su cola
 #  correspondiente, o bien se para. No asegurar esto ocasiona un bug importante
@@ -65,7 +67,7 @@ def is_open(timeout, ip, port):
         return False
 
 class ServiceConfig(object):
-    def __init__(self, service_with_config: solvers_dataset_pb2.SolverWithConfig, service_hash: str, stub_class, check_if_is_alive = None):
+    def __init__(self, service_with_config: gateway_pb2.SolverWithConfig, service_hash: str, stub_class, check_if_is_alive = None):
 
         self.stub_class = stub_class
 
@@ -104,41 +106,28 @@ class ServiceConfig(object):
             LOGGER('    list empty --> ' + str(self.instances))
             raise IndexError
     
-    def get_service_with_config(self) -> solvers_dataset_pb2.SolverWithConfig:
-        solver_with_meta = api_pb2.ServiceWithMeta()
+    def get_service_with_config(self) -> gateway_pb2.SolverWithConfig:
+        solver_with_meta = gateway_pb2.ServiceWithMeta()
         solver_with_meta.ParseFromString(
-            read_file(DIR + '__solvers__/' + self.solver_hash + '/p1')
+            read_file( DYNAMIC_SERVICE_INSTANCES + self.solver_hash + '/p1')
         )
         solver_with_meta.ParseFromString(
-            read_file(DIR + '__solvers__/' + self.solver_hash + '/p2')
+            read_file(DYNAMIC_SERVICE_INSTANCES + self.solver_hash + '/p2')
         )
-        return api_pb2.solvers__dataset__pb2.SolverWithConfig(
+        return gateway_pb2.SolverWithConfig(
                     meta = solver_with_meta.meta,
                     definition = solver_with_meta.service,
                     config = self.config
                 )
 
-    def service_extended(self):
-        for b in service_extended(
-                hashes=self.hashes,
-                config=self.config,
-                solver_hash=self.solver_hash
-        ):
-            yield b
-
-
-    def service_extended_from_disk(self):
-        for b in service_extended_from_disk(
-            hashes=self.hashes,
-            config=self.config
-        ):
-            yield b
-
-
-    def launch_service(self, gateway_stub):
-        instance = launch_service(
+    def launch_instance(self, gateway_stub):
+        instance = launch_instance(
             gateway_stub=gateway_stub,
-            solver_hash=self.solver_hash
+            solver_hash=self.solver_hash,
+            hashes=self.hashes,
+            config=self.config,
+            static_service_directory=STATIC_SERVICE_INSTANCES,
+            dynamic_service_instances=DYNAMIC_SERVICE_INSTANCES
         )
 
         try:
