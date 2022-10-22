@@ -61,10 +61,11 @@ class ServiceConfig(object):
     def __init__(self,
                  service_with_config: gateway_pb2.ServiceWithConfig,
                  service_hash: str, stub_class,
+                 timeout: int,
+                 failed_attempts: int,
+                 pass_timeout_times: int,
+                 dynamic: bool,
                  check_if_is_alive = None,
-                 timeout = 30,
-                 failed_attempts = 5,
-                 pass_timeout_times = 5
             ):
 
         self.stub_class = stub_class
@@ -93,6 +94,8 @@ class ServiceConfig(object):
         self.timeout = timeout,
         self.failed_attempts = failed_attempts,
         self.pass_timeout_times = pass_timeout_times
+
+        self.dynamic = dynamic  # Dynamic if is acquired by the api
 
     def add_instance(self, instance: ServiceInstance, deep=False):
         LOGGER('Add instance ' + str(instance))
@@ -128,7 +131,8 @@ class ServiceConfig(object):
             hashes = self.hashes,
             config = self.config,
             static_service_directory = STATIC_SERVICE_DIRECTORY,
-            dynamic_service_directory = DYNAMIC_SERVICE_DIRECTORY
+            dynamic_service_directory = DYNAMIC_SERVICE_DIRECTORY,
+            dynamic=self.dynamic
         )
 
         try:
@@ -225,6 +229,7 @@ class DependencyManager(metaclass = Singleton):
                     service_config_id: str,
                     service_hash: str,
                     stub_class,
+                    dynamic: bool,
                     timeout=None,
                     failed_attempts=None,
                     pass_timeout_times=None
@@ -243,7 +248,8 @@ class DependencyManager(metaclass = Singleton):
                 stub_class = stub_class,
                 timeout = timeout if timeout else self.timeout,
                 failed_attempts = failed_attempts if failed_attempts else self.failed_attempts,
-                pass_timeout_times = pass_timeout_times if pass_timeout_times else self.pass_timeout_times
+                pass_timeout_times = pass_timeout_times if pass_timeout_times else self.pass_timeout_times,
+                dynamic = dynamic
             )
         })
         self.lock.release()
