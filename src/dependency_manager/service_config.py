@@ -16,6 +16,7 @@ class ServiceConfig(object):
                  failed_attempts: int,
                  pass_timeout_times: int,
                  dynamic: bool,
+                 dev_client: str,
                  check_if_is_alive=None,
                  ):
 
@@ -81,7 +82,8 @@ class ServiceConfig(object):
             config=self.config,
             static_service_directory=STATIC_SERVICE_DIRECTORY,
             dynamic_service_directory=DYNAMIC_SERVICE_DIRECTORY,
-            dynamic=self.dynamic
+            dynamic=self.dynamic,
+            dev_client=self.dev_client
         )
 
         try:
