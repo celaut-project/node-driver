@@ -1,2 +1,5 @@
-celaut_pb2
+dependency_manager
+gateway
 iobigdata
+protos
+utils

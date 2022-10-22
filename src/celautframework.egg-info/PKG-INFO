@@ -1,14 +1,11 @@
-Metadata-Version: 2.1
+Metadata-Version: 1.2
 Name: celautframework
 Version: -dev-
 Summary: UNKNOWN
-Home-page: https://github.com/jossemii/GRPCBigBuffer_Client.git
+Home-page: https://github.com/jossemii/CelautFramework.git
 Author: Josemi Avellana
 Author-email: josemi.bnf@gmail.com
 License: UNKNOWN
+Description: UNKNOWN
 Platform: UNKNOWN
 Requires-Python: >=3.6
-License-File: LICENSE
-
-UNKNOWN
-
