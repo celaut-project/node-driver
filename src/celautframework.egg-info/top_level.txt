@@ -2,4 +2,5 @@ celaut
 dependency_manager
 gateway
 protos
+resource_manager
 utils

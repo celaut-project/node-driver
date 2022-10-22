@@ -2,7 +2,6 @@ LICENSE
 pyproject.toml
 setup.py
 src/celaut.py
-src/iobigdata.py
 src/celautframework.egg-info/PKG-INFO
 src/celautframework.egg-info/SOURCES.txt
 src/celautframework.egg-info/dependency_links.txt
@@ -20,6 +19,8 @@ src/gateway/protos/gateway_pb2_grpc.py
 src/gateway/protos/gateway_pb2_grpcbf.py
 src/protos/__init__.py
 src/protos/celaut_pb2.py
+src/resource_manager/__init__.py
+src/resource_manager/resourcemanager.py
 src/utils/__init__.py
 src/utils/get_grpc_uri.py
 src/utils/lambdas.py
