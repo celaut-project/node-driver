@@ -8,7 +8,7 @@ setup(
     author='Josemi Avellana',
     author_email='josemi.bnf@gmail.com',
 
-    py_modules=['celaut'],
+    py_modules=['celaut_framework'],
     install_requires=[
         'grpcio==1.34.1',
         'grpcio-tools==1.34.1',

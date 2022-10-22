@@ -1,4 +1,4 @@
-celaut
+celaut_framework
 dependency_manager
 gateway
 protos
