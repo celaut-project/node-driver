@@ -72,19 +72,17 @@ class ServiceConfig(object):
 
         self.service_hash = service_hash  # SHA3-256 hash value that identifies the service definition on memory (if it's not complete is the hash of the incomplete definition).
         try:
-            self.hashes = service_with_config.meta.hashtag.hash # list of hashes that the service's metadata has.
+            self.hashes = service_with_config.service.metadata.hashtag.hash # list of hashes that the service's metadata has.
         except:  # if there are no hashes in the metadata
-            if service_with_config.meta.complete: # if the service definition say that it's complete, the service hash can be used.
-                self.hashes = [celaut.Any.HashTag.hash(
+            self.hashes = [
+                celaut.Any.HashTag.Hash(
                     type = SHA3_256_ID,
                     value = bytes.fromhex(service_hash)
-                )]
-            else:
-                self.hashes = []
+                )
+            ]
 
         # Service configuration.
-        self.config = celaut.Configuration()
-        self.config.enviroment_variables.update(service_with_config.enviroment_variables)
+        self.config = service_with_config.config
 
         # Service's instances.
         self.instances = []  # se da uso de una pila para que el 'maintainer' detecte las instancias que quedan en desuso,
