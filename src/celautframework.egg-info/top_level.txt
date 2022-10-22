@@ -1,5 +1,4 @@
 dependency_manager
 gateway
-iobigdata
 protos
 utils
