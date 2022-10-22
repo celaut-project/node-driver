@@ -1,6 +1,7 @@
 LICENSE
 pyproject.toml
 setup.py
+src/celaut.py
 src/iobigdata.py
 src/celautframework.egg-info/PKG-INFO
 src/celautframework.egg-info/SOURCES.txt
