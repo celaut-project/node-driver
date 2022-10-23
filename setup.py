@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='celautframework',
-    version='__dev__',
+    version='0.0.1',
 
     url='https://github.com/jossemii/CelautFramework.git',
     author='Josemi Avellana',
