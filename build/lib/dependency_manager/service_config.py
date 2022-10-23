@@ -10,36 +10,32 @@ from protos import celaut_pb2 as celaut
 
 class ServiceConfig(object):
     def __init__(self,
-                 service_with_config: gateway_pb2.ServiceWithConfig,
-                 service_hash: str, stub_class,
-                 timeout: int,
-                 failed_attempts: int,
-                 pass_timeout_times: int,
-                 dynamic: bool,
-                 dev_client: str,
-                 static_service_directory: str,
-                 dynamic_service_directory: str,
-                 check_if_is_alive=None,
-                 ):
+            service_hash: str, 
+            config: celaut.Configuration,
+            stub_class,
+            timeout: int,
+            failed_attempts: int,
+            pass_timeout_times: int,
+            dynamic: bool,
+            dev_client: str,
+            static_service_directory: str,
+            dynamic_service_directory: str,
+            check_if_is_alive=None,
+        ):
 
         self.stub_class = stub_class
         self.dev_client = dev_client
         self.static_service_directory = static_service_directory
         self.dynamic_service_directory = dynamic_service_directory
 
-        self.service_hash = service_hash  # SHA3-256 hash value that identifies the service definition on memory (if it's not complete is the hash of the incomplete definition).
-        try:
-            self.hashes = service_with_config.service.metadata.hashtag.hash  # list of hashes that the service's metadata has.
-        except:  # if there are no hashes in the metadata
-            self.hashes = [
-                celaut.Any.HashTag.Hash(
-                    type=SHA3_256_ID,
-                    value=bytes.fromhex(service_hash)
-                )
-            ]
-
-        # Service configuration.
-        self.config = service_with_config.config
+        self.service_hash = service_hash
+        self.config = config if config else celaut.Configuration()
+        self.hashes = [
+            celaut.Any.Metadata.HashTag.Hash(
+                type = SHA3_256_ID,
+                value = bytes.fromhex(service_hash)
+            )
+        ]
 
         # Service's instances.
         self.instances = []  # se da uso de una pila para que el 'maintainer' detecte las instancias que quedan en desuso,

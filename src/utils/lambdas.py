@@ -1,3 +1,4 @@
+import hashlib
 import logging
 
 LOGGER = lambda message: logging.getLogger().debug(message + '\n')

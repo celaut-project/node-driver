@@ -5,7 +5,9 @@ from time import sleep
 from dependency_manager.service_config import ServiceConfig
 from gateway.communication import generate_gateway_stub
 from gateway.protos import gateway_pb2
-from utils.lambdas import LOGGER, SHA3_256
+from src.protos import celaut_pb2
+from src.utils.lambdas import SHA3_256
+from utils.lambdas import LOGGER
 from utils.singleton import Singleton
 
 MAINTENANCE_SLEEP_TIME_DEFAULT = 60
@@ -89,26 +91,28 @@ class DependencyManager(metaclass = Singleton):
                     self.lock.release()
 
     def add_service(self,
-                    service_with_config: gateway_pb2.ServiceWithConfig,
-                    service_config_id: str,
                     service_hash: str,
+                    config: celaut_pb2.Configuration,
                     stub_class,
                     dynamic: bool,
-                    timeout=None,
-                    failed_attempts=None,
-                    pass_timeout_times=None
+                    timeout: int = None,
+                    failed_attempts: int = None,
+                    pass_timeout_times: int = None
                 ):
-        if service_config_id != SHA3_256(
-            value = service_with_config.SerializeToString() # This service not touch metadata, so it can use the hash for id.
-        ).hex():
-            LOGGER('Service config not valid ', service_with_config, service_config_id)
-            raise Exception('Service config not valid ', service_with_config, service_config_id)
-
+        
+        if not config:
+            config = celaut_pb2.Configuration()
+            
+        service_config_id: str = SHA3_256(
+            service_hash + SHA3_256(
+                config.SerializeToString()
+            ).hex()
+        ).hex()
         self.lock.acquire()
         self.services.update({
             service_config_id : ServiceConfig(
-                service_with_config = service_with_config,
                 service_hash = service_hash,
+                config = config,
                 stub_class = stub_class,
                 timeout = timeout if timeout else self.timeout,
                 failed_attempts = failed_attempts if failed_attempts else self.failed_attempts,
