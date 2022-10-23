@@ -3,10 +3,10 @@ import os
 from typing import List
 
 from grpcbigbuffer import Dir, client_grpc
-from gateway_pb2_grpcbf import StartService_input_partitions, StartService_input
 import grpc
 
 from gateway.protos import gateway_pb2, gateway_pb2_grpc
+from gateway.protos.gateway_pb2_grpcbf import StartService_input_partitions, StartService_input
 from protos import celaut_pb2
 from utils.lambdas import LOGGER
 

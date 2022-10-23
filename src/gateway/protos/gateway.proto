@@ -14,6 +14,10 @@ message Instance {
     optional string token = 3;
 }
 
+message Client {
+    string client_id = 1;
+}
+
 message ServiceWithMeta {
     celaut.Any.Metadata metadata = 1;
     celaut.Service service = 2;
