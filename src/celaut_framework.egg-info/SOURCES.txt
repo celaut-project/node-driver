@@ -13,6 +13,7 @@ src/dependency_manager/service_instance.py
 src/gateway/__init__.py
 src/gateway/communication.py
 src/gateway/protos/__init__.py
+src/gateway/protos/buffer_pb2.py
 src/gateway/protos/gateway_pb2.py
 src/gateway/protos/gateway_pb2_grpc.py
 src/gateway/protos/gateway_pb2_grpcbf.py
