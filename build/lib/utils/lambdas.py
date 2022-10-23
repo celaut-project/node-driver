@@ -9,4 +9,4 @@ SHA3_256 = lambda value: "" if value is None else hashlib.sha3_256(value).digest
 # Directories
 
 DYNAMIC_SERVICE_DIRECTORY = '__services__/'
-STATIC_SERVICE_DIRECTORY = '/'
+STATIC_SERVICE_DIRECTORY = ''
