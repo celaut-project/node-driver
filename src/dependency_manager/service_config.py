@@ -17,10 +17,15 @@ class ServiceConfig(object):
                  pass_timeout_times: int,
                  dynamic: bool,
                  dev_client: str,
+                 static_service_directory: str,
+                 dynamic_service_directory: str,
                  check_if_is_alive=None,
                  ):
 
         self.stub_class = stub_class
+        self.dev_client = dev_client
+        self.static_service_directory = static_service_directory
+        self.dynamic_service_directory = dynamic_service_directory
 
         self.service_hash = service_hash  # SHA3-256 hash value that identifies the service definition on memory (if it's not complete is the hash of the incomplete definition).
         try:
@@ -80,8 +85,10 @@ class ServiceConfig(object):
             service_hash=self.service_hash,
             hashes=self.hashes,
             config=self.config,
-            static_service_directory=STATIC_SERVICE_DIRECTORY,
-            dynamic_service_directory=DYNAMIC_SERVICE_DIRECTORY,
+            static_service_directory = self.static_service_directory if self.static_service_directory \
+                else STATIC_SERVICE_DIRECTORY,
+            dynamic_service_directory = self.dynamic_service_directory if self.dynamic_service_directory \
+                else DYNAMIC_SERVICE_DIRECTORY,
             dynamic=self.dynamic,
             dev_client=self.dev_client
         )

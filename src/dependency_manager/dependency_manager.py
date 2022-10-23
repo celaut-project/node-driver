@@ -17,6 +17,8 @@ class DependencyManager(metaclass = Singleton):
 
     def __init__(self,
                  gateway_main_dir: str,
+                 static_service_directory: str,
+                 dynamic_service_directory: str,
                  maintenance_sleep_time: int = MAINTENANCE_SLEEP_TIME_DEFAULT,
                  timeout: int = TIMEOUT_DEFAULT,
                  failed_attempts: int = FAILED_ATTEMPTS_DEFAULT,
@@ -30,6 +32,8 @@ class DependencyManager(metaclass = Singleton):
         self.pass_timeout_times = pass_timeout_times
 
         self.dev_client = dev_client
+        self.static_service_directory = static_service_directory
+        self.dynamic_service_directory = dynamic_service_directory
 
         self.services = {}
         self.gateway_stub = generate_gateway_stub(gateway_main_dir)
@@ -110,7 +114,9 @@ class DependencyManager(metaclass = Singleton):
                 failed_attempts = failed_attempts if failed_attempts else self.failed_attempts,
                 pass_timeout_times = pass_timeout_times if pass_timeout_times else self.pass_timeout_times,
                 dynamic = dynamic,
-                dev_client = self.dev_client
+                dev_client = self.dev_client,
+                static_service_directory = self.static_service_directory,
+                dynamic_service_directory = self.dynamic_service_directory
             )
         })
         self.lock.release()

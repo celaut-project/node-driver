@@ -55,14 +55,14 @@ def service_extended(
                 sleep(1)
                 continue
 
-def launch_instance(self, gateway_stub,
+def launch_instance(gateway_stub,
                     hashes, config, service_hash,
                     dynamic_service_directory,
                     static_service_directory,
                     dynamic,
                     dev_client,
                 ) -> gateway_pb2.Instance:
-    LOGGER('    launching new instance for solver ' + self.service_hash)
+    LOGGER('    launching new instance for solver ' + service_hash)
     while True:
         try:
             instance = next(client_grpc(
