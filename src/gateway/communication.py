@@ -12,7 +12,9 @@ from utils.lambdas import LOGGER
 
 
 def generate_gateway_stub(gateway_uri: str) -> gateway_pb2_grpc.GatewayStub:
-    return gateway_pb2_grpc.GatewayStub(grpc.insecure_channel(gateway_uri))
+    return gateway_pb2_grpc.GatewayStub(
+        grpc.insecure_channel(gateway_uri)
+    )
 
 
 def generate_instance_stub(stub_class, uri):

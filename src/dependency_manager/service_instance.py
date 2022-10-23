@@ -45,5 +45,16 @@ class ServiceInstance(object):
 
     def stop(self, gateway_stub):
         stop(gateway_stub=gateway_stub, token=self.token)
+        
+        
+
+    def __enter__(self):
+        self.mark_time()
+        return self.stub
+    
+    def __exit__(self):
+        self.is_zombie(
+            
+        )
 
 

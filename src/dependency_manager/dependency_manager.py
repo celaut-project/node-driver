@@ -5,6 +5,7 @@ from time import sleep
 from dependency_manager.service_config import ServiceConfig
 from gateway.communication import generate_gateway_stub
 from gateway.protos import gateway_pb2
+from src.dependency_manager.service_interface import ServiceInterface
 from src.protos import celaut_pb2
 from src.utils.lambdas import SHA3_256
 from utils.lambdas import LOGGER
@@ -39,6 +40,7 @@ class DependencyManager(metaclass = Singleton):
 
         self.services = {}
         self.gateway_stub = generate_gateway_stub(gateway_main_dir)
+        
         self.lock = Lock()
         Thread(target=self.maintenance, name='DepedencyMaintainer').start()
 
@@ -98,7 +100,7 @@ class DependencyManager(metaclass = Singleton):
                     timeout: int = None,
                     failed_attempts: int = None,
                     pass_timeout_times: int = None
-                ):
+                ) -> ServiceInterface:
         
         if not config:
             config = celaut_pb2.Configuration()
@@ -109,8 +111,7 @@ class DependencyManager(metaclass = Singleton):
             ).hex()
         ).hex()
         self.lock.acquire()
-        self.services.update({
-            service_config_id : ServiceConfig(
+        service_config = ServiceConfig(
                 service_hash = service_hash,
                 config = config,
                 stub_class = stub_class,
@@ -122,11 +123,16 @@ class DependencyManager(metaclass = Singleton):
                 static_service_directory = self.static_service_directory,
                 dynamic_service_directory = self.dynamic_service_directory
             )
+        self.services.update({
+            service_config_id : service_config
         })
         self.lock.release()
-        try:
-            LOGGER('ADDED NEW SERVICE ' + str(service_config_id) + ' \ndef_ids -> ' +  str(service_with_config.meta.hashtag.hash[0].value.hex()))
-        except: LOGGER('ADDED NEW SERVICE ' + str(service_config_id))
+        
+        return ServiceInterface(
+            service_with_config = service_config,
+            gateway_stub = self.gateway_stub
+        )
+        
 
     def get_service_with_config(self, service_config_id: str) -> gateway_pb2.ServiceWithConfig:
         return self.services[service_config_id].get_service_with_config()
