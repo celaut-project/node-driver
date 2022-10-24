@@ -1,3 +1,5 @@
+from threading import Lock
+
 from dependency_manager.service_instance import ServiceInstance
 from gateway.communication import generate_instance_stub, launch_instance
 from gateway.protos import gateway_pb2
@@ -22,6 +24,8 @@ class ServiceConfig(object):
             dynamic_service_directory: str,
             check_if_is_alive=None,
         ):
+
+        self.lock: Lock = Lock()
 
         self.stub_class = stub_class
         self.dev_client = dev_client

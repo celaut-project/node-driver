@@ -5,6 +5,8 @@
 from datetime import datetime
 from time import sleep
 
+import grpc
+
 from gateway.communication import stop
 
 
@@ -18,9 +20,11 @@ class ServiceInstance(object):
         self.failed_attempts = 0
         self.check_if_is_alive = check_if_is_alive
 
+
     def error(self):
         sleep(1) # Wait if the service is loading.
         self.failed_attempts = self.failed_attempts + 1
+
 
     def is_zombie(self,
                   pass_timeout_times,
@@ -33,28 +37,31 @@ class ServiceInstance(object):
                not self.check_if_is_alive(timeout=timeout) \
                or self.failed_attempts > failed_attempts
 
+
     def timeout_passed(self):
         self.pass_timeout = self.pass_timeout + 1
+
 
     def reset_timers(self):
         self.pass_timeout = 0
         self.failed_attempts = 0
 
+
     def mark_time(self):
         self.use_datetime = datetime.now()
 
+
     def stop(self, gateway_stub):
         stop(gateway_stub=gateway_stub, token=self.token)
-        
-        
 
-    def __enter__(self):
-        self.mark_time()
-        return self.stub
-    
-    def __exit__(self):
-        self.is_zombie(
-            
-        )
 
+    def compute_exception(self, e: Exception) -> str:
+        # https://github.com/avinassh/grpc-errors/blob/master/python/client.py
+        if type(e) == grpc.RpcError and int(e.code().value[0]) == 4:
+                self.timeout_passed()
+                return 'timeout'
+
+        else:
+            self.error()
+            return 'error'
 
