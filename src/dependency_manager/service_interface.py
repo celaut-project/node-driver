@@ -31,6 +31,9 @@ class ServiceInterface:
 
     def push_instance(self, instance: ServiceInstance):
 
+        # Si la instancia se encuentra en estado zombie
+        # la detiene, en caso contrario la introduce
+        #  de nuevo en su cola correspondiente.
         if instance.is_zombie(
             pass_timeout_times = self.sc.pass_timeout_times,
             timeout = self.sc.timeout,
