@@ -6,11 +6,11 @@ src/celaut_framework.egg-info/SOURCES.txt
 src/celaut_framework.egg-info/dependency_links.txt
 src/celaut_framework.egg-info/requires.txt
 src/celaut_framework.egg-info/top_level.txt
-src/dependency_manager/ServiceInterface.py
 src/dependency_manager/__init__.py
 src/dependency_manager/dependency_manager.py
 src/dependency_manager/service_config.py
 src/dependency_manager/service_instance.py
+src/dependency_manager/service_interface.py
 src/gateway/__init__.py
 src/gateway/communication.py
 src/gateway/protos/__init__.py
