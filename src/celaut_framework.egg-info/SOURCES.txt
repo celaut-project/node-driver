@@ -6,6 +6,7 @@ src/celaut_framework.egg-info/SOURCES.txt
 src/celaut_framework.egg-info/dependency_links.txt
 src/celaut_framework.egg-info/requires.txt
 src/celaut_framework.egg-info/top_level.txt
+src/dependency_manager/ServiceInterface.py
 src/dependency_manager/__init__.py
 src/dependency_manager/dependency_manager.py
 src/dependency_manager/service_config.py

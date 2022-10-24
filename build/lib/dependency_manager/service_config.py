@@ -1,3 +1,5 @@
+from threading import Lock
+
 from dependency_manager.service_instance import ServiceInstance
 from gateway.communication import generate_instance_stub, launch_instance
 from gateway.protos import gateway_pb2
@@ -22,6 +24,8 @@ class ServiceConfig(object):
             dynamic_service_directory: str,
             check_if_is_alive=None,
         ):
+
+        self.lock: Lock = Lock()
 
         self.stub_class = stub_class
         self.dev_client = dev_client
@@ -60,20 +64,7 @@ class ServiceConfig(object):
         except IndexError:
             LOGGER('    list empty --> ' + str(self.instances))
             raise IndexError
-
-    def get_service_with_config(self) -> gateway_pb2.ServiceWithConfig:
-        service_with_meta = gateway_pb2.ServiceWithMeta()
-        service_with_meta.ParseFromString(
-            read_file(DYNAMIC_SERVICE_DIRECTORY + self.service_hash + '/p1')
-        )
-        service_with_meta.ParseFromString(
-            read_file(DYNAMIC_SERVICE_DIRECTORY + self.service_hash + '/p2')
-        )
-        return gateway_pb2.ServiceWithConfig(
-            meta=service_with_meta.meta,
-            definition=service_with_meta.service,
-            config=self.config
-        )
+        
 
     def launch_instance(self, gateway_stub) -> ServiceInstance:
         instance = launch_instance(
@@ -101,4 +92,18 @@ class ServiceConfig(object):
             token=instance.token,
             check_if_is_alive=self.check_if_is_alive if self.check_if_is_alive \
                 else lambda timeout: is_open(timeout=timeout, ip=uri.ip, port=uri.port)
+        )
+
+    def get_service_with_config(self) -> gateway_pb2.ServiceWithConfig:
+        service_with_meta = gateway_pb2.ServiceWithMeta()
+        service_with_meta.ParseFromString(
+            read_file(DYNAMIC_SERVICE_DIRECTORY + self.service_hash + '/p1')
+        )
+        service_with_meta.ParseFromString(
+            read_file(DYNAMIC_SERVICE_DIRECTORY + self.service_hash + '/p2')
+        )
+        return gateway_pb2.ServiceWithConfig(
+            meta=service_with_meta.meta,
+            definition=service_with_meta.service,
+            config=self.config
         )
