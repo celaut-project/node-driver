@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package buffer;
+package framework_buffer;
 
 message Empty {}
 

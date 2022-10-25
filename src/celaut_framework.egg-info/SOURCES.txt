@@ -14,9 +14,9 @@ src/celaut_framework/dependency_manager/service_interface.py
 src/celaut_framework/gateway/__init__.py
 src/celaut_framework/gateway/communication.py
 src/celaut_framework/gateway/protos/__init__.py
-src/celaut_framework/gateway/protos/buffer_pb2.py
-src/celaut_framework/gateway/protos/gateway_pb2.py
-src/celaut_framework/gateway/protos/gateway_pb2_grpc.py
+src/celaut_framework/gateway/protos/framework_buffer_pb2.py
+src/celaut_framework/gateway/protos/framework_gateway_pb2.py
+src/celaut_framework/gateway/protos/framework_gateway_pb2_grpc.py
 src/celaut_framework/gateway/protos/gateway_pb2_grpcbf.py
 src/celaut_framework/protos/__init__.py
 src/celaut_framework/protos/celaut_pb2.py

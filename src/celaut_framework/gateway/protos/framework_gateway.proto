@@ -1,8 +1,8 @@
 syntax = "proto3";
-package gateway;
+package framework_gateway;
 
 import "celaut.proto";
-import "buffer.proto";
+import "framework_buffer.proto";
 
 message TokenMessage {
     string token = 1;
@@ -53,8 +53,8 @@ message ModifyServiceSystemResourcesInput {
 
 // GRPC.
 service Gateway {
-    rpc StartService( stream buffer.Buffer) returns ( stream buffer.Buffer) {} // ( celaut.Any.Metadata.HashTag.Hash=H, celaut.Any=S, celaut.Configuration=C; { H v S v H^C v S^C } ) -> Instance
-    rpc StopService(stream buffer.Buffer) returns (stream buffer.Buffer) {} // TokenMessage -> Empty
+    rpc StartService( stream framework_buffer.Buffer) returns ( stream framework_buffer.Buffer) {} // ( celaut.Any.Metadata.HashTag.Hash=H, celaut.Any=S, celaut.Configuration=C; { H v S v H^C v S^C } ) -> Instance
+    rpc StopService(stream framework_buffer.Buffer) returns (stream framework_buffer.Buffer) {} // TokenMessage -> Empty
 
-    rpc ModifyServiceSystemResources(stream buffer.Buffer) returns (stream buffer.Buffer) {} // ModifyServiceSystemResourcesInput -> Empty
+    rpc ModifyServiceSystemResources(stream framework_buffer.Buffer) returns (stream framework_buffer.Buffer) {} // ModifyServiceSystemResourcesInput -> Empty
 }

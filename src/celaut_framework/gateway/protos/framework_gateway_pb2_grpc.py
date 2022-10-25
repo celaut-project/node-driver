@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-from celaut_framework.gateway.protos import buffer_pb2 as buffer__pb2
+import framework_buffer_pb2 as framework__buffer__pb2
 
 
 class GatewayStub(object):
@@ -16,19 +16,19 @@ class GatewayStub(object):
             channel: A grpc.Channel.
         """
         self.StartService = channel.stream_stream(
-                '/gateway.Gateway/StartService',
-                request_serializer=buffer__pb2.Buffer.SerializeToString,
-                response_deserializer=buffer__pb2.Buffer.FromString,
+                '/framework_gateway.Gateway/StartService',
+                request_serializer=framework__buffer__pb2.Buffer.SerializeToString,
+                response_deserializer=framework__buffer__pb2.Buffer.FromString,
                 )
         self.StopService = channel.stream_stream(
-                '/gateway.Gateway/StopService',
-                request_serializer=buffer__pb2.Buffer.SerializeToString,
-                response_deserializer=buffer__pb2.Buffer.FromString,
+                '/framework_gateway.Gateway/StopService',
+                request_serializer=framework__buffer__pb2.Buffer.SerializeToString,
+                response_deserializer=framework__buffer__pb2.Buffer.FromString,
                 )
         self.ModifyServiceSystemResources = channel.stream_stream(
-                '/gateway.Gateway/ModifyServiceSystemResources',
-                request_serializer=buffer__pb2.Buffer.SerializeToString,
-                response_deserializer=buffer__pb2.Buffer.FromString,
+                '/framework_gateway.Gateway/ModifyServiceSystemResources',
+                request_serializer=framework__buffer__pb2.Buffer.SerializeToString,
+                response_deserializer=framework__buffer__pb2.Buffer.FromString,
                 )
 
 
@@ -59,22 +59,22 @@ def add_GatewayServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'StartService': grpc.stream_stream_rpc_method_handler(
                     servicer.StartService,
-                    request_deserializer=buffer__pb2.Buffer.FromString,
-                    response_serializer=buffer__pb2.Buffer.SerializeToString,
+                    request_deserializer=framework__buffer__pb2.Buffer.FromString,
+                    response_serializer=framework__buffer__pb2.Buffer.SerializeToString,
             ),
             'StopService': grpc.stream_stream_rpc_method_handler(
                     servicer.StopService,
-                    request_deserializer=buffer__pb2.Buffer.FromString,
-                    response_serializer=buffer__pb2.Buffer.SerializeToString,
+                    request_deserializer=framework__buffer__pb2.Buffer.FromString,
+                    response_serializer=framework__buffer__pb2.Buffer.SerializeToString,
             ),
             'ModifyServiceSystemResources': grpc.stream_stream_rpc_method_handler(
                     servicer.ModifyServiceSystemResources,
-                    request_deserializer=buffer__pb2.Buffer.FromString,
-                    response_serializer=buffer__pb2.Buffer.SerializeToString,
+                    request_deserializer=framework__buffer__pb2.Buffer.FromString,
+                    response_serializer=framework__buffer__pb2.Buffer.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'gateway.Gateway', rpc_method_handlers)
+            'framework_gateway.Gateway', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
 
@@ -94,9 +94,9 @@ class Gateway(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.stream_stream(request_iterator, target, '/gateway.Gateway/StartService',
-            buffer__pb2.Buffer.SerializeToString,
-            buffer__pb2.Buffer.FromString,
+        return grpc.experimental.stream_stream(request_iterator, target, '/framework_gateway.Gateway/StartService',
+            framework__buffer__pb2.Buffer.SerializeToString,
+            framework__buffer__pb2.Buffer.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -111,9 +111,9 @@ class Gateway(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.stream_stream(request_iterator, target, '/gateway.Gateway/StopService',
-            buffer__pb2.Buffer.SerializeToString,
-            buffer__pb2.Buffer.FromString,
+        return grpc.experimental.stream_stream(request_iterator, target, '/framework_gateway.Gateway/StopService',
+            framework__buffer__pb2.Buffer.SerializeToString,
+            framework__buffer__pb2.Buffer.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -128,8 +128,8 @@ class Gateway(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.stream_stream(request_iterator, target, '/gateway.Gateway/ModifyServiceSystemResources',
-            buffer__pb2.Buffer.SerializeToString,
-            buffer__pb2.Buffer.FromString,
+        return grpc.experimental.stream_stream(request_iterator, target, '/framework_gateway.Gateway/ModifyServiceSystemResources',
+            framework__buffer__pb2.Buffer.SerializeToString,
+            framework__buffer__pb2.Buffer.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

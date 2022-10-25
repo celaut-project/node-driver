@@ -2,7 +2,7 @@ from threading import Lock
 
 from celaut_framework.dependency_manager.service_instance import ServiceInstance
 from celaut_framework.gateway.communication import generate_instance_stub, launch_instance
-from celaut_framework.gateway.protos import gateway_pb2
+from celaut_framework.gateway.protos import framework_gateway_pb2
 from celaut_framework.utils.get_grpc_uri import get_grpc_uri
 from celaut_framework.utils import LOGGER, STATIC_SERVICE_DIRECTORY, DYNAMIC_SERVICE_DIRECTORY, SHA3_256_ID
 from celaut_framework.utils.network import is_open

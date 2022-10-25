@@ -10,33 +10,34 @@ from google.protobuf import symbol_database as _symbol_database
 
 _sym_db = _symbol_database.Default()
 
-from celaut_framework.protos import celaut_pb2 as celaut__pb2
-from celaut_framework.gateway.protos import framework_buffer_pb2 as buffer__pb2
+
+import celaut_pb2 as celaut__pb2
+import framework_buffer_pb2 as framework__buffer__pb2
 
 
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='framework_gateway.proto',
-  package='gateway',
+  package='framework_gateway',
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\rframework_gateway.proto\x12\x07gateway\x1a\x0c\x63\x65laut.proto\x1a\x0c\x62uffer.proto\"\x1d\n\x0cTokenMessage\x12\r\n\x05token\x18\x01 \x01(\t\"\x90\x01\n\x08Instance\x12\x30\n\rinstance_meta\x18\x01 \x01(\x0b\x32\x14.celaut.Any.MetadataH\x00\x88\x01\x01\x12\"\n\x08instance\x18\x02 \x01(\x0b\x32\x10.celaut.Instance\x12\x12\n\x05token\x18\x03 \x01(\tH\x01\x88\x01\x01\x42\x10\n\x0e_instance_metaB\x08\n\x06_token\"\x1b\n\x06\x43lient\x12\x11\n\tclient_id\x18\x01 \x01(\t\"[\n\x0fServiceWithMeta\x12&\n\x08metadata\x18\x01 \x01(\x0b\x32\x14.celaut.Any.Metadata\x12 \n\x07service\x18\x02 \x01(\x0b\x32\x0f.celaut.Service\"\xe4\x01\n\x0eHashWithConfig\x12/\n\x04hash\x18\x01 \x01(\x0b\x32!.celaut.Any.Metadata.HashTag.Hash\x12%\n\x06\x63onfig\x18\x03 \x01(\x0b\x32\x15.celaut.Configuration\x12-\n\nmin_sysreq\x18\x04 \x01(\x0b\x32\x14.celaut.SysresourcesH\x00\x88\x01\x01\x12-\n\nmax_sysreq\x18\x05 \x01(\x0b\x32\x14.celaut.SysresourcesH\x01\x88\x01\x01\x42\r\n\x0b_min_sysreqB\r\n\x0b_max_sysreq\"\xe1\x01\n\x11ServiceWithConfig\x12)\n\x07service\x18\x02 \x01(\x0b\x32\x18.gateway.ServiceWithMeta\x12%\n\x06\x63onfig\x18\x03 \x01(\x0b\x32\x15.celaut.Configuration\x12-\n\nmin_sysreq\x18\x04 \x01(\x0b\x32\x14.celaut.SysresourcesH\x00\x88\x01\x01\x12-\n\nmax_sysreq\x18\x05 \x01(\x0b\x32\x14.celaut.SysresourcesH\x01\x88\x01\x01\x42\r\n\x0b_min_sysreqB\r\n\x0b_max_sysreq\"\x16\n\tGasAmount\x12\t\n\x01n\x18\x01 \x01(\t\"k\n\"ModifyServiceSystemResourcesOutput\x12$\n\x06sysreq\x18\x01 \x01(\x0b\x32\x14.celaut.Sysresources\x12\x1f\n\x03gas\x18\x02 \x01(\x0b\x32\x12.gateway.GasAmount\"w\n!ModifyServiceSystemResourcesInput\x12(\n\nmin_sysreq\x18\x01 \x01(\x0b\x32\x14.celaut.Sysresources\x12(\n\nmax_sysreq\x18\x02 \x01(\x0b\x32\x14.celaut.Sysresources2\xba\x01\n\x07Gateway\x12\x34\n\x0cStartService\x12\x0e.buffer.Buffer\x1a\x0e.buffer.Buffer\"\x00(\x01\x30\x01\x12\x33\n\x0bStopService\x12\x0e.buffer.Buffer\x1a\x0e.buffer.Buffer\"\x00(\x01\x30\x01\x12\x44\n\x1cModifyServiceSystemResources\x12\x0e.buffer.Buffer\x1a\x0e.buffer.Buffer\"\x00(\x01\x30\x01\x62\x06proto3'
+  serialized_pb=b'\n\x17\x66ramework_gateway.proto\x12\x11\x66ramework_gateway\x1a\x0c\x63\x65laut.proto\x1a\x16\x66ramework_buffer.proto\"\x1d\n\x0cTokenMessage\x12\r\n\x05token\x18\x01 \x01(\t\"\x90\x01\n\x08Instance\x12\x30\n\rinstance_meta\x18\x01 \x01(\x0b\x32\x14.celaut.Any.MetadataH\x00\x88\x01\x01\x12\"\n\x08instance\x18\x02 \x01(\x0b\x32\x10.celaut.Instance\x12\x12\n\x05token\x18\x03 \x01(\tH\x01\x88\x01\x01\x42\x10\n\x0e_instance_metaB\x08\n\x06_token\"\x1b\n\x06\x43lient\x12\x11\n\tclient_id\x18\x01 \x01(\t\"[\n\x0fServiceWithMeta\x12&\n\x08metadata\x18\x01 \x01(\x0b\x32\x14.celaut.Any.Metadata\x12 \n\x07service\x18\x02 \x01(\x0b\x32\x0f.celaut.Service\"\xe4\x01\n\x0eHashWithConfig\x12/\n\x04hash\x18\x01 \x01(\x0b\x32!.celaut.Any.Metadata.HashTag.Hash\x12%\n\x06\x63onfig\x18\x03 \x01(\x0b\x32\x15.celaut.Configuration\x12-\n\nmin_sysreq\x18\x04 \x01(\x0b\x32\x14.celaut.SysresourcesH\x00\x88\x01\x01\x12-\n\nmax_sysreq\x18\x05 \x01(\x0b\x32\x14.celaut.SysresourcesH\x01\x88\x01\x01\x42\r\n\x0b_min_sysreqB\r\n\x0b_max_sysreq\"\xeb\x01\n\x11ServiceWithConfig\x12\x33\n\x07service\x18\x02 \x01(\x0b\x32\".framework_gateway.ServiceWithMeta\x12%\n\x06\x63onfig\x18\x03 \x01(\x0b\x32\x15.celaut.Configuration\x12-\n\nmin_sysreq\x18\x04 \x01(\x0b\x32\x14.celaut.SysresourcesH\x00\x88\x01\x01\x12-\n\nmax_sysreq\x18\x05 \x01(\x0b\x32\x14.celaut.SysresourcesH\x01\x88\x01\x01\x42\r\n\x0b_min_sysreqB\r\n\x0b_max_sysreq\"\x16\n\tGasAmount\x12\t\n\x01n\x18\x01 \x01(\t\"u\n\"ModifyServiceSystemResourcesOutput\x12$\n\x06sysreq\x18\x01 \x01(\x0b\x32\x14.celaut.Sysresources\x12)\n\x03gas\x18\x02 \x01(\x0b\x32\x1c.framework_gateway.GasAmount\"w\n!ModifyServiceSystemResourcesInput\x12(\n\nmin_sysreq\x18\x01 \x01(\x0b\x32\x14.celaut.Sysresources\x12(\n\nmax_sysreq\x18\x02 \x01(\x0b\x32\x14.celaut.Sysresources2\xf6\x01\n\x07Gateway\x12H\n\x0cStartService\x12\x18.framework_buffer.Buffer\x1a\x18.framework_buffer.Buffer\"\x00(\x01\x30\x01\x12G\n\x0bStopService\x12\x18.framework_buffer.Buffer\x1a\x18.framework_buffer.Buffer\"\x00(\x01\x30\x01\x12X\n\x1cModifyServiceSystemResources\x12\x18.framework_buffer.Buffer\x1a\x18.framework_buffer.Buffer\"\x00(\x01\x30\x01\x62\x06proto3'
   ,
-  dependencies=[celaut__pb2.DESCRIPTOR,buffer__pb2.DESCRIPTOR,])
+  dependencies=[celaut__pb2.DESCRIPTOR,framework__buffer__pb2.DESCRIPTOR,])
 
 
 
 
 _TOKENMESSAGE = _descriptor.Descriptor(
   name='TokenMessage',
-  full_name='gateway.TokenMessage',
+  full_name='framework_gateway.TokenMessage',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='token', full_name='gateway.TokenMessage.token', index=0,
+      name='token', full_name='framework_gateway.TokenMessage.token', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -54,35 +55,35 @@ _TOKENMESSAGE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=54,
-  serialized_end=83,
+  serialized_start=84,
+  serialized_end=113,
 )
 
 
 _INSTANCE = _descriptor.Descriptor(
   name='Instance',
-  full_name='gateway.Instance',
+  full_name='framework_gateway.Instance',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='instance_meta', full_name='gateway.Instance.instance_meta', index=0,
+      name='instance_meta', full_name='framework_gateway.Instance.instance_meta', index=0,
       number=1, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='instance', full_name='gateway.Instance.instance', index=1,
+      name='instance', full_name='framework_gateway.Instance.instance', index=1,
       number=2, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='token', full_name='gateway.Instance.token', index=2,
+      name='token', full_name='framework_gateway.Instance.token', index=2,
       number=3, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -100,31 +101,31 @@ _INSTANCE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
     _descriptor.OneofDescriptor(
-      name='_instance_meta', full_name='gateway.Instance._instance_meta',
+      name='_instance_meta', full_name='framework_gateway.Instance._instance_meta',
       index=0, containing_type=None,
       create_key=_descriptor._internal_create_key,
     fields=[]),
     _descriptor.OneofDescriptor(
-      name='_token', full_name='gateway.Instance._token',
+      name='_token', full_name='framework_gateway.Instance._token',
       index=1, containing_type=None,
       create_key=_descriptor._internal_create_key,
     fields=[]),
   ],
-  serialized_start=86,
-  serialized_end=230,
+  serialized_start=116,
+  serialized_end=260,
 )
 
 
 _CLIENT = _descriptor.Descriptor(
   name='Client',
-  full_name='gateway.Client',
+  full_name='framework_gateway.Client',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='client_id', full_name='gateway.Client.client_id', index=0,
+      name='client_id', full_name='framework_gateway.Client.client_id', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -142,28 +143,28 @@ _CLIENT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=232,
-  serialized_end=259,
+  serialized_start=262,
+  serialized_end=289,
 )
 
 
 _SERVICEWITHMETA = _descriptor.Descriptor(
   name='ServiceWithMeta',
-  full_name='gateway.ServiceWithMeta',
+  full_name='framework_gateway.ServiceWithMeta',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='metadata', full_name='gateway.ServiceWithMeta.metadata', index=0,
+      name='metadata', full_name='framework_gateway.ServiceWithMeta.metadata', index=0,
       number=1, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='service', full_name='gateway.ServiceWithMeta.service', index=1,
+      name='service', full_name='framework_gateway.ServiceWithMeta.service', index=1,
       number=2, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
@@ -181,42 +182,42 @@ _SERVICEWITHMETA = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=261,
-  serialized_end=352,
+  serialized_start=291,
+  serialized_end=382,
 )
 
 
 _HASHWITHCONFIG = _descriptor.Descriptor(
   name='HashWithConfig',
-  full_name='gateway.HashWithConfig',
+  full_name='framework_gateway.HashWithConfig',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='hash', full_name='gateway.HashWithConfig.hash', index=0,
+      name='hash', full_name='framework_gateway.HashWithConfig.hash', index=0,
       number=1, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='config', full_name='gateway.HashWithConfig.config', index=1,
+      name='config', full_name='framework_gateway.HashWithConfig.config', index=1,
       number=3, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='min_sysreq', full_name='gateway.HashWithConfig.min_sysreq', index=2,
+      name='min_sysreq', full_name='framework_gateway.HashWithConfig.min_sysreq', index=2,
       number=4, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='max_sysreq', full_name='gateway.HashWithConfig.max_sysreq', index=3,
+      name='max_sysreq', full_name='framework_gateway.HashWithConfig.max_sysreq', index=3,
       number=5, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
@@ -234,52 +235,52 @@ _HASHWITHCONFIG = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
     _descriptor.OneofDescriptor(
-      name='_min_sysreq', full_name='gateway.HashWithConfig._min_sysreq',
+      name='_min_sysreq', full_name='framework_gateway.HashWithConfig._min_sysreq',
       index=0, containing_type=None,
       create_key=_descriptor._internal_create_key,
     fields=[]),
     _descriptor.OneofDescriptor(
-      name='_max_sysreq', full_name='gateway.HashWithConfig._max_sysreq',
+      name='_max_sysreq', full_name='framework_gateway.HashWithConfig._max_sysreq',
       index=1, containing_type=None,
       create_key=_descriptor._internal_create_key,
     fields=[]),
   ],
-  serialized_start=355,
-  serialized_end=583,
+  serialized_start=385,
+  serialized_end=613,
 )
 
 
 _SERVICEWITHCONFIG = _descriptor.Descriptor(
   name='ServiceWithConfig',
-  full_name='gateway.ServiceWithConfig',
+  full_name='framework_gateway.ServiceWithConfig',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='service', full_name='gateway.ServiceWithConfig.service', index=0,
+      name='service', full_name='framework_gateway.ServiceWithConfig.service', index=0,
       number=2, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='config', full_name='gateway.ServiceWithConfig.config', index=1,
+      name='config', full_name='framework_gateway.ServiceWithConfig.config', index=1,
       number=3, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='min_sysreq', full_name='gateway.ServiceWithConfig.min_sysreq', index=2,
+      name='min_sysreq', full_name='framework_gateway.ServiceWithConfig.min_sysreq', index=2,
       number=4, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='max_sysreq', full_name='gateway.ServiceWithConfig.max_sysreq', index=3,
+      name='max_sysreq', full_name='framework_gateway.ServiceWithConfig.max_sysreq', index=3,
       number=5, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
@@ -297,31 +298,31 @@ _SERVICEWITHCONFIG = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
     _descriptor.OneofDescriptor(
-      name='_min_sysreq', full_name='gateway.ServiceWithConfig._min_sysreq',
+      name='_min_sysreq', full_name='framework_gateway.ServiceWithConfig._min_sysreq',
       index=0, containing_type=None,
       create_key=_descriptor._internal_create_key,
     fields=[]),
     _descriptor.OneofDescriptor(
-      name='_max_sysreq', full_name='gateway.ServiceWithConfig._max_sysreq',
+      name='_max_sysreq', full_name='framework_gateway.ServiceWithConfig._max_sysreq',
       index=1, containing_type=None,
       create_key=_descriptor._internal_create_key,
     fields=[]),
   ],
-  serialized_start=586,
-  serialized_end=811,
+  serialized_start=616,
+  serialized_end=851,
 )
 
 
 _GASAMOUNT = _descriptor.Descriptor(
   name='GasAmount',
-  full_name='gateway.GasAmount',
+  full_name='framework_gateway.GasAmount',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='n', full_name='gateway.GasAmount.n', index=0,
+      name='n', full_name='framework_gateway.GasAmount.n', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -339,28 +340,28 @@ _GASAMOUNT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=813,
-  serialized_end=835,
+  serialized_start=853,
+  serialized_end=875,
 )
 
 
 _MODIFYSERVICESYSTEMRESOURCESOUTPUT = _descriptor.Descriptor(
   name='ModifyServiceSystemResourcesOutput',
-  full_name='gateway.ModifyServiceSystemResourcesOutput',
+  full_name='framework_gateway.ModifyServiceSystemResourcesOutput',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='sysreq', full_name='gateway.ModifyServiceSystemResourcesOutput.sysreq', index=0,
+      name='sysreq', full_name='framework_gateway.ModifyServiceSystemResourcesOutput.sysreq', index=0,
       number=1, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='gas', full_name='gateway.ModifyServiceSystemResourcesOutput.gas', index=1,
+      name='gas', full_name='framework_gateway.ModifyServiceSystemResourcesOutput.gas', index=1,
       number=2, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
@@ -378,28 +379,28 @@ _MODIFYSERVICESYSTEMRESOURCESOUTPUT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=837,
-  serialized_end=944,
+  serialized_start=877,
+  serialized_end=994,
 )
 
 
 _MODIFYSERVICESYSTEMRESOURCESINPUT = _descriptor.Descriptor(
   name='ModifyServiceSystemResourcesInput',
-  full_name='gateway.ModifyServiceSystemResourcesInput',
+  full_name='framework_gateway.ModifyServiceSystemResourcesInput',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='min_sysreq', full_name='gateway.ModifyServiceSystemResourcesInput.min_sysreq', index=0,
+      name='min_sysreq', full_name='framework_gateway.ModifyServiceSystemResourcesInput.min_sysreq', index=0,
       number=1, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='max_sysreq', full_name='gateway.ModifyServiceSystemResourcesInput.max_sysreq', index=1,
+      name='max_sysreq', full_name='framework_gateway.ModifyServiceSystemResourcesInput.max_sysreq', index=1,
       number=2, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
@@ -417,8 +418,8 @@ _MODIFYSERVICESYSTEMRESOURCESINPUT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=946,
-  serialized_end=1065,
+  serialized_start=996,
+  serialized_end=1115,
 )
 
 _INSTANCE.fields_by_name['instance_meta'].message_type = celaut__pb2._ANY_METADATA
@@ -468,64 +469,64 @@ _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 TokenMessage = _reflection.GeneratedProtocolMessageType('TokenMessage', (_message.Message,), {
   'DESCRIPTOR' : _TOKENMESSAGE,
-  '__module__' : 'gateway_pb2'
-  # @@protoc_insertion_point(class_scope:gateway.TokenMessage)
+  '__module__' : 'framework_gateway_pb2'
+  # @@protoc_insertion_point(class_scope:framework_gateway.TokenMessage)
   })
 _sym_db.RegisterMessage(TokenMessage)
 
 Instance = _reflection.GeneratedProtocolMessageType('Instance', (_message.Message,), {
   'DESCRIPTOR' : _INSTANCE,
-  '__module__' : 'gateway_pb2'
-  # @@protoc_insertion_point(class_scope:gateway.Instance)
+  '__module__' : 'framework_gateway_pb2'
+  # @@protoc_insertion_point(class_scope:framework_gateway.Instance)
   })
 _sym_db.RegisterMessage(Instance)
 
 Client = _reflection.GeneratedProtocolMessageType('Client', (_message.Message,), {
   'DESCRIPTOR' : _CLIENT,
-  '__module__' : 'gateway_pb2'
-  # @@protoc_insertion_point(class_scope:gateway.Client)
+  '__module__' : 'framework_gateway_pb2'
+  # @@protoc_insertion_point(class_scope:framework_gateway.Client)
   })
 _sym_db.RegisterMessage(Client)
 
 ServiceWithMeta = _reflection.GeneratedProtocolMessageType('ServiceWithMeta', (_message.Message,), {
   'DESCRIPTOR' : _SERVICEWITHMETA,
-  '__module__' : 'gateway_pb2'
-  # @@protoc_insertion_point(class_scope:gateway.ServiceWithMeta)
+  '__module__' : 'framework_gateway_pb2'
+  # @@protoc_insertion_point(class_scope:framework_gateway.ServiceWithMeta)
   })
 _sym_db.RegisterMessage(ServiceWithMeta)
 
 HashWithConfig = _reflection.GeneratedProtocolMessageType('HashWithConfig', (_message.Message,), {
   'DESCRIPTOR' : _HASHWITHCONFIG,
-  '__module__' : 'gateway_pb2'
-  # @@protoc_insertion_point(class_scope:gateway.HashWithConfig)
+  '__module__' : 'framework_gateway_pb2'
+  # @@protoc_insertion_point(class_scope:framework_gateway.HashWithConfig)
   })
 _sym_db.RegisterMessage(HashWithConfig)
 
 ServiceWithConfig = _reflection.GeneratedProtocolMessageType('ServiceWithConfig', (_message.Message,), {
   'DESCRIPTOR' : _SERVICEWITHCONFIG,
-  '__module__' : 'gateway_pb2'
-  # @@protoc_insertion_point(class_scope:gateway.ServiceWithConfig)
+  '__module__' : 'framework_gateway_pb2'
+  # @@protoc_insertion_point(class_scope:framework_gateway.ServiceWithConfig)
   })
 _sym_db.RegisterMessage(ServiceWithConfig)
 
 GasAmount = _reflection.GeneratedProtocolMessageType('GasAmount', (_message.Message,), {
   'DESCRIPTOR' : _GASAMOUNT,
-  '__module__' : 'gateway_pb2'
-  # @@protoc_insertion_point(class_scope:gateway.GasAmount)
+  '__module__' : 'framework_gateway_pb2'
+  # @@protoc_insertion_point(class_scope:framework_gateway.GasAmount)
   })
 _sym_db.RegisterMessage(GasAmount)
 
 ModifyServiceSystemResourcesOutput = _reflection.GeneratedProtocolMessageType('ModifyServiceSystemResourcesOutput', (_message.Message,), {
   'DESCRIPTOR' : _MODIFYSERVICESYSTEMRESOURCESOUTPUT,
-  '__module__' : 'gateway_pb2'
-  # @@protoc_insertion_point(class_scope:gateway.ModifyServiceSystemResourcesOutput)
+  '__module__' : 'framework_gateway_pb2'
+  # @@protoc_insertion_point(class_scope:framework_gateway.ModifyServiceSystemResourcesOutput)
   })
 _sym_db.RegisterMessage(ModifyServiceSystemResourcesOutput)
 
 ModifyServiceSystemResourcesInput = _reflection.GeneratedProtocolMessageType('ModifyServiceSystemResourcesInput', (_message.Message,), {
   'DESCRIPTOR' : _MODIFYSERVICESYSTEMRESOURCESINPUT,
-  '__module__' : 'gateway_pb2'
-  # @@protoc_insertion_point(class_scope:gateway.ModifyServiceSystemResourcesInput)
+  '__module__' : 'framework_gateway_pb2'
+  # @@protoc_insertion_point(class_scope:framework_gateway.ModifyServiceSystemResourcesInput)
   })
 _sym_db.RegisterMessage(ModifyServiceSystemResourcesInput)
 
@@ -533,41 +534,41 @@ _sym_db.RegisterMessage(ModifyServiceSystemResourcesInput)
 
 _GATEWAY = _descriptor.ServiceDescriptor(
   name='Gateway',
-  full_name='gateway.Gateway',
+  full_name='framework_gateway.Gateway',
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=1068,
-  serialized_end=1254,
+  serialized_start=1118,
+  serialized_end=1364,
   methods=[
   _descriptor.MethodDescriptor(
     name='StartService',
-    full_name='gateway.Gateway.StartService',
+    full_name='framework_gateway.Gateway.StartService',
     index=0,
     containing_service=None,
-    input_type=buffer__pb2._BUFFER,
-    output_type=buffer__pb2._BUFFER,
+    input_type=framework__buffer__pb2._BUFFER,
+    output_type=framework__buffer__pb2._BUFFER,
     serialized_options=None,
     create_key=_descriptor._internal_create_key,
   ),
   _descriptor.MethodDescriptor(
     name='StopService',
-    full_name='gateway.Gateway.StopService',
+    full_name='framework_gateway.Gateway.StopService',
     index=1,
     containing_service=None,
-    input_type=buffer__pb2._BUFFER,
-    output_type=buffer__pb2._BUFFER,
+    input_type=framework__buffer__pb2._BUFFER,
+    output_type=framework__buffer__pb2._BUFFER,
     serialized_options=None,
     create_key=_descriptor._internal_create_key,
   ),
   _descriptor.MethodDescriptor(
     name='ModifyServiceSystemResources',
-    full_name='gateway.Gateway.ModifyServiceSystemResources',
+    full_name='framework_gateway.Gateway.ModifyServiceSystemResources',
     index=2,
     containing_service=None,
-    input_type=buffer__pb2._BUFFER,
-    output_type=buffer__pb2._BUFFER,
+    input_type=framework__buffer__pb2._BUFFER,
+    output_type=framework__buffer__pb2._BUFFER,
     serialized_options=None,
     create_key=_descriptor._internal_create_key,
   ),
