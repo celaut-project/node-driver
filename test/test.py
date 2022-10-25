@@ -3,7 +3,7 @@
 # # psutil.virtual_memory().available en RamLocker.__init__
 
 from time import sleep
-from src.resource_manager import IOBigData, mem_manager
+from celaut_framework.resource_manager import IOBigData, mem_manager
 from threading import Thread, Lock
 
 RAM_POOL = 5

@@ -1,6 +1,0 @@
-celaut_framework
-dependency_manager
-gateway
-protos
-resource_manager
-utils

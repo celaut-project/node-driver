@@ -5,10 +5,10 @@ from typing import List
 from grpcbigbuffer import Dir, client_grpc
 import grpc
 
-from gateway.protos import gateway_pb2, gateway_pb2_grpc
-from gateway.protos.gateway_pb2_grpcbf import StartService_input_partitions, StartService_input
-from protos import celaut_pb2
-from utils.lambdas import LOGGER
+from celaut_framework.gateway.protos import gateway_pb2, gateway_pb2_grpc
+from celaut_framework.gateway.protos.gateway_pb2_grpcbf import StartService_input_partitions, StartService_input
+from celaut_framework.protos import celaut_pb2
+from celaut_framework.utils import LOGGER
 
 
 def generate_gateway_stub(gateway_uri: str) -> gateway_pb2_grpc.GatewayStub:

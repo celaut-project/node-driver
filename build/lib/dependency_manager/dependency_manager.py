@@ -2,14 +2,14 @@ from datetime import timedelta, datetime
 from threading import Thread, Lock
 from time import sleep
 
-from dependency_manager.service_config import ServiceConfig
-from gateway.communication import generate_gateway_stub
-from gateway.protos import gateway_pb2
-from src.dependency_manager.service_interface import ServiceInterface
-from src.protos import celaut_pb2
-from src.utils.lambdas import SHA3_256
-from utils.lambdas import LOGGER
-from utils.singleton import Singleton
+from celaut_framework.dependency_manager import ServiceConfig
+from celaut_framework.gateway.communication import generate_gateway_stub
+from celaut_framework.gateway.protos import gateway_pb2
+from celaut_framework.dependency_manager import ServiceInterface
+from celaut_framework.protos import celaut_pb2
+from celaut_framework.utils import SHA3_256
+from celaut_framework.utils import LOGGER
+from celaut_framework.utils import Singleton
 
 MAINTENANCE_SLEEP_TIME_DEFAULT = 60
 TIMEOUT_DEFAULT = 30
@@ -100,7 +100,7 @@ class DependencyManager(metaclass = Singleton):
                     timeout: int = None,
                     failed_attempts: int = None,
                     pass_timeout_times: int = None
-                ) -> ServiceInterface:
+                    ) -> ServiceInterface:
         
         if not config:
             config = celaut_pb2.Configuration()

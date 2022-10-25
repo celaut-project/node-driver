@@ -3,7 +3,7 @@ import gc
 from threading import Lock
 from time import sleep
 
-from utils.singleton import Singleton
+from celaut_framework.utils import Singleton
 
 mem_manager = lambda len: ResourceManager().lock(len=len)
 class ResourceManager(metaclass=Singleton):

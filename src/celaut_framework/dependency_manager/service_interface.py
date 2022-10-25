@@ -1,6 +1,6 @@
 from celaut_framework.dependency_manager.service_instance import ServiceInstance
 
-from celaut_framework.dependency_manager import ServiceConfig
+from celaut_framework.dependency_manager.service_config import ServiceConfig
 
 
 class ServiceInterface:

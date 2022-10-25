@@ -7,7 +7,7 @@ from time import sleep
 
 import grpc
 
-from gateway.communication import stop
+from celaut_framework.gateway.communication import stop
 
 
 class ServiceInstance(object):

@@ -1,4 +1,4 @@
-from gateway.protos import buffer_pb2, gateway_pb2
+from celaut_framework.gateway.protos import buffer_pb2, gateway_pb2
 
 # This is part of the transport protocol (slot) data.
 StartService_input = {
