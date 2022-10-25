@@ -134,5 +134,5 @@ class DependencyManager(metaclass = Singleton):
         )
         
 
-    def get_service_with_config(self, service_config_id: str) -> gateway_pb2.ServiceWithConfig:
+    def get_service_with_config(self, service_config_id: str) -> framework_gateway_pb2.ServiceWithConfig:
         return self.services[service_config_id].get_service_with_config()

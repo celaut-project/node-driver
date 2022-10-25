@@ -94,15 +94,15 @@ class ServiceConfig(object):
                 else lambda timeout: is_open(timeout=timeout, ip=uri.ip, port=uri.port)
         )
 
-    def get_service_with_config(self) -> gateway_pb2.ServiceWithConfig:
-        service_with_meta = gateway_pb2.ServiceWithMeta()
+    def get_service_with_config(self) -> framework_gateway_pb2.ServiceWithConfig:
+        service_with_meta = framework_gateway_pb2.ServiceWithMeta()
         service_with_meta.ParseFromString(
             read_file(DYNAMIC_SERVICE_DIRECTORY + self.service_hash + '/p1')
         )
         service_with_meta.ParseFromString(
             read_file(DYNAMIC_SERVICE_DIRECTORY + self.service_hash + '/p2')
         )
-        return gateway_pb2.ServiceWithConfig(
+        return framework_gateway_pb2.ServiceWithConfig(
             meta=service_with_meta.meta,
             definition=service_with_meta.service,
             config=self.config

@@ -11,8 +11,8 @@ from celaut_framework.protos import celaut_pb2
 from celaut_framework.utils.lambdas import LOGGER
 
 
-def generate_gateway_stub(gateway_uri: str) -> gateway_pb2_grpc.GatewayStub:
-    return gateway_pb2_grpc.GatewayStub(
+def generate_gateway_stub(gateway_uri: str) -> framework_gateway_pb2_grpc.GatewayStub:
+    return framework_gateway_pb2_grpc.GatewayStub(
         grpc.insecure_channel(gateway_uri)
     )
 
@@ -33,8 +33,8 @@ def service_extended(
     for hash in hashes:
         if use_config:  # Solo hace falta enviar la configuration en el primer paquete.
             use_config = False
-            if dev_client: yield gateway_pb2.Client(client_id = dev_client)
-            yield gateway_pb2.HashWithConfig(
+            if dev_client: yield framework_gateway_pb2.Client(client_id = dev_client)
+            yield framework_gateway_pb2.HashWithConfig(
                 hash = hash,
                 config = config,
                 min_sysreq=celaut_pb2.Sysresources(
@@ -44,14 +44,14 @@ def service_extended(
         yield hash
     if dynamic:
         yield (
-            gateway_pb2.ServiceWithMeta,
+            framework_gateway_pb2.ServiceWithMeta,
             Dir(service_directory + service_hash+'/p1'),
             Dir(service_directory + service_hash+'/p2')
         )
     else:
         while True:
             if not os.path.isfile(service_directory + 'services.zip'):
-                yield gateway_pb2.ServiceWithMeta, Dir(service_directory + service_hash)
+                yield framework_gateway_pb2.ServiceWithMeta, Dir(service_directory + service_hash)
                 break
             else:
                 sleep(1)
@@ -63,7 +63,7 @@ def launch_instance(gateway_stub,
                     static_service_directory,
                     dynamic,
                     dev_client,
-                ) -> gateway_pb2.Instance:
+                ) -> framework_gateway_pb2.Instance:
     LOGGER('    launching new instance for solver ' + service_hash)
     while True:
         try:
@@ -77,7 +77,7 @@ def launch_instance(gateway_stub,
                     dynamic = dynamic,
                     dev_client = dev_client
                 ),
-                indices_parser=gateway_pb2.Instance,
+                indices_parser=framework_gateway_pb2.Instance,
                 partitions_message_mode_parser=True,
                 indices_serializer=StartService_input,
                 partitions_serializer=StartService_input_partitions
@@ -95,10 +95,10 @@ def stop(gateway_stub, token: str):
         try:
             next(client_grpc(
                 method = gateway_stub.StopService,
-                input = gateway_pb2.TokenMessage(
+                input = framework_gateway_pb2.TokenMessage(
                             token = token
                         ),
-                indices_serializer = gateway_pb2.TokenMessage
+                indices_serializer = framework_gateway_pb2.TokenMessage
             ))
             break
         except grpc.RpcError as e:
