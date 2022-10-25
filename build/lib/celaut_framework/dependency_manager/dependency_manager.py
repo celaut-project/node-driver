@@ -106,9 +106,9 @@ class DependencyManager(metaclass = Singleton):
             config = celaut_pb2.Configuration()
             
         service_config_id: str = SHA3_256(
-            service_hash + SHA3_256(
+            bytes(service_hash, 'utf-8') + SHA3_256(
                 config.SerializeToString()
-            ).hex()
+            )
         ).hex()
         self.lock.acquire()
         service_config = ServiceConfig(
