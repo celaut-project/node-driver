@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import framework_buffer_pb2 as framework__buffer__pb2
+from celaut_framework.gateway.protos import framework_buffer_pb2 as framework__buffer__pb2
 
 
 class GatewayStub(object):
