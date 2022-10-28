@@ -1,59 +1,63 @@
-from celaut_framework.gateway.protos import framework_buffer_pb2, framework_gateway_pb2
+from celaut_framework.gateway.protos import buffer_pb2, gateway_pb2
 
-# This is part of the transport protocol (slot) data.
 StartService_input = {
-    1 : framework_gateway_pb2.celaut__pb2.Any.Metadata.HashTag.Hash,
-    2 : framework_gateway_pb2.ServiceWithMeta,
-    3 : framework_gateway_pb2.HashWithConfig,
-    4 : framework_gateway_pb2.ServiceWithConfig
+    5 : gateway_pb2.Client,
+    6 : gateway_pb2.RecursionGuard,
+
+    1 : gateway_pb2.celaut__pb2.Any.Metadata.HashTag.Hash,
+    2 : gateway_pb2.ServiceWithMeta,
+    3 : gateway_pb2.HashWithConfig,
+    4 : gateway_pb2.ServiceWithConfig
 }
 
 StartService_input_partitions = {
     2 : [
-            framework_buffer_pb2.Buffer.Head.Partition(index={
-                1 : framework_buffer_pb2.Buffer.Head.Partition(),
-                2 : framework_buffer_pb2.Buffer.Head.Partition(index={
-                    1 : framework_buffer_pb2.Buffer.Head.Partition(index={
-                        3 : framework_buffer_pb2.Buffer.Head.Partition(),
-                        4 : framework_buffer_pb2.Buffer.Head.Partition(),
+            buffer_pb2.Buffer.Head.Partition(index={
+                1 : buffer_pb2.Buffer.Head.Partition(),
+                2 : buffer_pb2.Buffer.Head.Partition(index={
+                    1 : buffer_pb2.Buffer.Head.Partition(index={
+                        3 : buffer_pb2.Buffer.Head.Partition(),
+                        4 : buffer_pb2.Buffer.Head.Partition(),
                     }),
-                    2 : framework_buffer_pb2.Buffer.Head.Partition(),
-                    3 : framework_buffer_pb2.Buffer.Head.Partition(),
-                    4 : framework_buffer_pb2.Buffer.Head.Partition(),
+                    2 : buffer_pb2.Buffer.Head.Partition(),
+                    3 : buffer_pb2.Buffer.Head.Partition(),
+                    4 : buffer_pb2.Buffer.Head.Partition(),
                 })
             }),
-            framework_buffer_pb2.Buffer.Head.Partition(index={
-                2 : framework_buffer_pb2.Buffer.Head.Partition(index={
-                    1 : framework_buffer_pb2.Buffer.Head.Partition(index={
-                        1 : framework_buffer_pb2.Buffer.Head.Partition(),
-                        2 : framework_buffer_pb2
-                        .Buffer.Head.Partition()
+            buffer_pb2.Buffer.Head.Partition(index={
+                2 : buffer_pb2.Buffer.Head.Partition(index={
+                    1 : buffer_pb2.Buffer.Head.Partition(index={
+                        1 : buffer_pb2.Buffer.Head.Partition(),
+                        2 : buffer_pb2.Buffer.Head.Partition()
                     }),
                 })
             })
         ],
     4 : [
-            framework_buffer_pb2.Buffer.Head.Partition(index={
-                2 : framework_buffer_pb2.Buffer.Head.Partition(index={
-                    1 : framework_buffer_pb2.Buffer.Head.Partition(),
-                    2 : framework_buffer_pb2.Buffer.Head.Partition(index={
-                        1 : framework_buffer_pb2.Buffer.Head.Partition(index={
-                            3 : framework_buffer_pb2.Buffer.Head.Partition(),
-                            4 : framework_buffer_pb2.Buffer.Head.Partition(),
+            buffer_pb2.Buffer.Head.Partition(index={
+                2 : buffer_pb2.Buffer.Head.Partition(index={
+                    1 : buffer_pb2.Buffer.Head.Partition(),
+                    2 : buffer_pb2.Buffer.Head.Partition(index={
+                        1 : buffer_pb2.Buffer.Head.Partition(index={
+                            3 : buffer_pb2.Buffer.Head.Partition(),
+                            4 : buffer_pb2.Buffer.Head.Partition(),
                         }),
-                        2 : framework_buffer_pb2.Buffer.Head.Partition(),
-                        3 : framework_buffer_pb2.Buffer.Head.Partition(),
-                        4 : framework_buffer_pb2.Buffer.Head.Partition(),
+                        2 : buffer_pb2.Buffer.Head.Partition(),
+                        3 : buffer_pb2.Buffer.Head.Partition(),
+                        4 : buffer_pb2.Buffer.Head.Partition(),
                     })
                 }),
-                3 : framework_buffer_pb2.Buffer.Head.Partition()
+                3 : buffer_pb2.Buffer.Head.Partition(),
+                4 : buffer_pb2.Buffer.Head.Partition(),
+                5 : buffer_pb2.Buffer.Head.Partition(),
+                6 : buffer_pb2.Buffer.Head.Partition(),
             }),
-            framework_buffer_pb2.Buffer.Head.Partition(index={
-                2 : framework_buffer_pb2.Buffer.Head.Partition(index={
-                    2 : framework_buffer_pb2.Buffer.Head.Partition(index={
-                        1 : framework_buffer_pb2.Buffer.Head.Partition(index={
-                            1 : framework_buffer_pb2.Buffer.Head.Partition(),
-                            2 : framework_buffer_pb2.Buffer.Head.Partition()
+            buffer_pb2.Buffer.Head.Partition(index={
+                2 : buffer_pb2.Buffer.Head.Partition(index={
+                    2 : buffer_pb2.Buffer.Head.Partition(index={
+                        1 : buffer_pb2.Buffer.Head.Partition(index={
+                            1 : buffer_pb2.Buffer.Head.Partition(),
+                            2 : buffer_pb2.Buffer.Head.Partition()
                         }),
                     })
                 })

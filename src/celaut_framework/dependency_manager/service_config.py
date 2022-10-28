@@ -2,7 +2,7 @@ from threading import Lock
 
 from celaut_framework.dependency_manager.service_instance import ServiceInstance
 from celaut_framework.gateway.communication import generate_instance_stub, launch_instance
-from celaut_framework.gateway.protos import framework_gateway_pb2
+from celaut_framework.gateway.protos import gateway_pb2
 from celaut_framework.utils.get_grpc_uri import get_grpc_uri
 from celaut_framework.utils.lambdas import LOGGER, STATIC_SERVICE_DIRECTORY, DYNAMIC_SERVICE_DIRECTORY, SHA3_256_ID
 from celaut_framework.utils.network import is_open
@@ -94,15 +94,15 @@ class ServiceConfig(object):
                 else lambda timeout: is_open(timeout=timeout, ip=uri.ip, port=uri.port)
         )
 
-    def get_service_with_config(self) -> framework_gateway_pb2.ServiceWithConfig:
-        service_with_meta = framework_gateway_pb2.ServiceWithMeta()
+    def get_service_with_config(self) -> gateway_pb2.ServiceWithConfig:
+        service_with_meta = gateway_pb2.ServiceWithMeta()
         service_with_meta.ParseFromString(
             read_file(DYNAMIC_SERVICE_DIRECTORY + self.service_hash + '/p1')
         )
         service_with_meta.ParseFromString(
             read_file(DYNAMIC_SERVICE_DIRECTORY + self.service_hash + '/p2')
         )
-        return framework_gateway_pb2.ServiceWithConfig(
+        return gateway_pb2.ServiceWithConfig(
             meta=service_with_meta.meta,
             definition=service_with_meta.service,
             config=self.config

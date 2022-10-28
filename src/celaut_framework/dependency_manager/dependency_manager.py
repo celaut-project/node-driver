@@ -4,7 +4,7 @@ from time import sleep
 
 from celaut_framework.dependency_manager.service_config import ServiceConfig
 from celaut_framework.gateway.communication import generate_gateway_stub
-from celaut_framework.gateway.protos import framework_gateway_pb2
+from celaut_framework.gateway.protos import gateway_pb2
 from celaut_framework.dependency_manager.service_interface import ServiceInterface
 from celaut_framework.protos import celaut_pb2
 from celaut_framework.utils.lambdas import SHA3_256
@@ -134,5 +134,5 @@ class DependencyManager(metaclass = Singleton):
         )
         
 
-    def get_service_with_config(self, service_config_id: str) -> framework_gateway_pb2.ServiceWithConfig:
+    def get_service_with_config(self, service_config_id: str) -> gateway_pb2.ServiceWithConfig:
         return self.services[service_config_id].get_service_with_config()
