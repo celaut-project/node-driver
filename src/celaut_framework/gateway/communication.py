@@ -2,7 +2,7 @@ from time import sleep
 import os
 from typing import List
 
-from grpcbigbuffer import Dir, client_grpc
+from grpcbigbuffer.grpcbigbuffer import Dir, client_grpc
 import grpc
 
 from celaut_framework.gateway.protos import gateway_pb2, gateway_pb2_grpc
