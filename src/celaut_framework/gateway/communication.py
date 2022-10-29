@@ -17,7 +17,7 @@ def generate_gateway_stub(gateway_uri: str) -> gateway_pb2_grpc.GatewayStub:
     )
 
 
-def generate_instance_stub(stub_class, uri):
+def generate_instance_stub(stub_class, uri: str):
     return stub_class(grpc.insecure_channel(uri))
 
 
