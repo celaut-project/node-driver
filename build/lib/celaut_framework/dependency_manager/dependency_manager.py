@@ -13,7 +13,7 @@ from celaut_framework.utils.singleton import Singleton
 
 MAINTENANCE_SLEEP_TIME_DEFAULT = 60
 TIMEOUT_DEFAULT = 30
-FAILED_ATTEMPTS_DEFAULT = 5
+FAILED_ATTEMPTS_DEFAULT = 20
 PASS_TIMEOUT_TIMES_DEFAULT = 5
 
 class DependencyManager(metaclass = Singleton):
