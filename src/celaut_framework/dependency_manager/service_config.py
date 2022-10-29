@@ -46,8 +46,8 @@ class ServiceConfig(object):
         #  ya que quedarán estancadas al final de la pila.
 
         self.check_if_is_alive = check_if_is_alive
-        self.timeout = timeout,
-        self.failed_attempts = failed_attempts,
+        self.timeout = timeout
+        self.failed_attempts = failed_attempts
         self.pass_timeout_times = pass_timeout_times
 
         self.dynamic = dynamic  # Dynamic if is acquired by the api
