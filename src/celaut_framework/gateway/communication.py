@@ -43,11 +43,13 @@ def service_extended(
             )
         yield hash
     if dynamic:
-        yield (
-            gateway_pb2.ServiceWithMeta,
-            Dir(service_directory + service_hash+'/p1'),
-            Dir(service_directory + service_hash+'/p2')
-        )
+        if os.path.isfile(service_directory + service_hash + '/p1') and \
+                os.path.isfile(service_directory + service_hash + '/p2'):
+            yield (
+                gateway_pb2.ServiceWithMeta,
+                Dir(service_directory + service_hash + '/p1'),
+                Dir(service_directory + service_hash + '/p2')
+            )
     else:
         while True:
             if not os.path.isfile(service_directory + 'services.zip'):
