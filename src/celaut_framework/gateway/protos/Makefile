@@ -1,2 +1,1 @@
-python3 -m grpc_tools.protoc -I . --python_out=. framework_buffer.proto --experimental_allow_proto3_optional &&
-python3 -m grpc_tools.protoc -I . -I ../../protos/. --python_out=. --grpc_python_out=. framework_gateway.proto --experimental_allow_proto3_optional
+python3 -m grpc_tools.protoc -I . -I ../../protos/. --python_out=. --grpc_python_out=. gateway.proto --experimental_allow_proto3_optional
