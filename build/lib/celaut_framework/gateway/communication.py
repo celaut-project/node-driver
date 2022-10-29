@@ -51,7 +51,8 @@ def service_extended(
     else:
         while True:
             if not os.path.isfile(service_directory + 'services.zip'):
-                yield gateway_pb2.ServiceWithMeta, Dir(service_directory + service_hash)
+                if os.path.isfile(service_directory + service_hash):
+                    yield gateway_pb2.ServiceWithMeta, Dir(service_directory + service_hash)
                 break
             else:
                 sleep(1)
