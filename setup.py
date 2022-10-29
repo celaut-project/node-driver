@@ -11,8 +11,6 @@ setup(
     py_modules=['celaut_framework'],
     install_requires=[
         'grpcbigbuffer@git+https://github.com/jossemii/GRPCBigBuffer',
-        'grpcio==1.48.1',
-        'protobuf==3.19.4',
     ],
     package_dir={"": "src"},
     packages=find_packages(where="src"),

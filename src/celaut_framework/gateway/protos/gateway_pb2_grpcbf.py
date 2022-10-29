@@ -65,22 +65,16 @@ StartService_input_partitions = {
         ]
 }
 
-
-"""
-    // ( celaut.Any.Metadata.HashTag.Hash=H, celaut.Any=S, celaut.Configuration=C; { H v S v H^C v S^C } )
-
-    // 2. S partition [(1, 2.4, 3, 4), (2.1, 2.2, 2.3)]
-
-    // 3. H^C 
-    message HashWithConfig { 
-        celaut.Any.Metadata.HashTag.Hash hash = 1;
-        celaut.Configuration config = 3;  
-    }
-
-    // 4. S^C  partition [(1, 2.4, 3, 4), (2.1, 2.2, 2.3)]
-    message ServiceWithConfig { 
-        celaut.Any service = 2;
-        celaut.Configuration config = 3;
-    }
-.proto
-"""
+StartService_input_single_partition = {
+    4: [
+            buffer_pb2.Buffer.Head.Partition(index={
+                3 : buffer_pb2.Buffer.Head.Partition(),
+                4 : buffer_pb2.Buffer.Head.Partition(),
+                5 : buffer_pb2.Buffer.Head.Partition(),
+                6 : buffer_pb2.Buffer.Head.Partition(),
+            }),
+           buffer_pb2.Buffer.Head.Partition(index={
+                2 : buffer_pb2.Buffer.Head.Partition()
+            })
+    ]
+}

@@ -6,7 +6,8 @@ from grpcbigbuffer import Dir, client_grpc
 import grpc
 
 from celaut_framework.gateway.protos import gateway_pb2, gateway_pb2_grpc
-from celaut_framework.gateway.protos.gateway_pb2_grpcbf import StartService_input_partitions, StartService_input
+from celaut_framework.gateway.protos.gateway_pb2_grpcbf import StartService_input_partitions, StartService_input, \
+    StartService_input_single_partition
 from celaut_framework.protos import celaut_pb2
 from celaut_framework.utils.lambdas import LOGGER
 
@@ -83,7 +84,8 @@ def launch_instance(gateway_stub,
                 indices_parser=gateway_pb2.Instance,
                 partitions_message_mode_parser=True,
                 indices_serializer=StartService_input,
-                partitions_serializer=StartService_input_partitions
+                partitions_serializer = StartService_input_partitions if dynamic \
+                    else StartService_input_single_partition
             ))
             break
         except grpc.RpcError as e:
