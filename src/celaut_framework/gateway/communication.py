@@ -31,25 +31,23 @@ def __service_extended(
         dev_client: str
 ):
     use_config = True
-    for hash in hashes:
+    for _hash in hashes:
         if use_config:  # Solo hace falta enviar la configuration en el primer paquete.
             use_config = False
             if dev_client: yield gateway_pb2.Client(client_id=dev_client)
             yield gateway_pb2.HashWithConfig(
-                hash=hash,
+                hash=_hash,
                 config=config,
                 min_sysreq=celaut_pb2.Sysresources(
                     mem_limit=80 * pow(10, 6)
                 )
             )
-        yield hash
+        yield _hash
     if dynamic:
-        if os.path.isfile(service_directory + service_hash + '/p1') and \
-                os.path.isfile(service_directory + service_hash + '/p2'):
+        if os.path.isfile(service_directory + service_hash):
             yield (
                 gateway_pb2.ServiceWithMeta,
-                Dir(service_directory + service_hash + '/p1'),
-                Dir(service_directory + service_hash + '/p2')
+                Dir(service_directory + service_hash)
             )
     else:
         while True:
