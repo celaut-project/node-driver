@@ -4,9 +4,8 @@ from time import sleep
 
 from celaut_framework.dependency_manager.service_config import ServiceConfig
 from celaut_framework.gateway.communication import generate_gateway_stub
-from celaut_framework.gateway.protos import gateway_pb2
+from celaut_framework.gateway.protos import gateway_pb2, celaut_pb2
 from celaut_framework.dependency_manager.service_interface import ServiceInterface
-from celaut_framework.protos import celaut_pb2
 from celaut_framework.utils.lambdas import SHA3_256
 from celaut_framework.utils.lambdas import LOGGER
 from celaut_framework.utils.singleton import Singleton

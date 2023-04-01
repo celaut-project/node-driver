@@ -10,10 +10,7 @@ from google.protobuf import symbol_database as _symbol_database
 
 _sym_db = _symbol_database.Default()
 
-
-from celaut_framework.protos import celaut_pb2 as celaut__pb2
-from celaut_framework.gateway.protos import framework_buffer_pb2 as framework__buffer__pb2
-
+from celaut_framework.gateway.protos import framework_buffer_pb2 as framework__buffer__pb2, celaut_pb2 as celaut__pb2
 
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='framework_gateway.proto',

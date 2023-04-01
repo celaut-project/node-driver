@@ -5,10 +5,9 @@ from typing import List
 from grpcbigbuffer.client import Dir, client_grpc
 import grpc
 
-from celaut_framework.gateway.protos import gateway_pb2, gateway_pb2_grpc
+from celaut_framework.gateway.protos import gateway_pb2, gateway_pb2_grpc, celaut_pb2
 from celaut_framework.gateway.protos.gateway_pb2_grpcbf import StartService_input_partitions, StartService_input, \
     StartService_input_single_partition
-from celaut_framework.protos import celaut_pb2
 from celaut_framework.utils.lambdas import LOGGER
 
 

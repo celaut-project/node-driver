@@ -1,4 +1,4 @@
-from celaut_framework.protos import celaut_pb2
+from celaut_framework.gateway.protos import celaut_pb2
 
 
 def get_grpc_uri(instance: celaut_pb2.Instance) -> celaut_pb2.Instance.Uri:

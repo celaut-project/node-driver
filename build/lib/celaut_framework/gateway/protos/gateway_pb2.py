@@ -10,8 +10,7 @@ from google.protobuf import symbol_database as _symbol_database
 
 _sym_db = _symbol_database.Default()
 
-
-from celaut_framework.protos import celaut_pb2 as celaut__pb2
+from celaut_framework.gateway.protos import celaut_pb2 as celaut__pb2
 from grpcbigbuffer import buffer_pb2 as buffer__pb2
 
 
