@@ -30,11 +30,12 @@ def __service_extended(
         dynamic: bool,
         dev_client: str
 ):
-    use_config = True
+    use_config: bool = True
     for _hash in hashes:
         if use_config:  # Solo hace falta enviar la configuration en el primer paquete.
             use_config = False
-            if dev_client: yield gateway_pb2.Client(client_id=dev_client)
+            if dev_client:
+                yield gateway_pb2.Client(client_id=dev_client)
             yield gateway_pb2.HashWithConfig(
                 hash=_hash,
                 config=config,
@@ -43,21 +44,16 @@ def __service_extended(
                 )
             )
         yield _hash
-    if dynamic:
-        if os.path.isfile(service_directory + service_hash):
-            yield (
-                gateway_pb2.ServiceWithMeta,
-                Dir(service_directory + service_hash)
-            )
-    else:
-        while True:
-            if not os.path.isfile(service_directory + 'services.zip'):
-                if os.path.isfile(service_directory + service_hash):
-                    yield gateway_pb2.ServiceWithMeta, Dir(service_directory + service_hash)
-                break
-            else:
-                sleep(1)
-                continue
+
+    while not dynamic and os.path.isfile(service_directory + 'services.zip'):
+        sleep(1)
+        continue
+
+    if os.path.isfile(service_directory + service_hash):
+        yield (
+            gateway_pb2.ServiceWithMeta,
+            Dir(service_directory + service_hash)
+        )
 
 
 def launch_instance(gateway_stub,
