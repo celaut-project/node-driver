@@ -22,7 +22,7 @@ def generate_instance_stub(stub_class, uri: str):
     return stub_class(grpc.insecure_channel(uri))
 
 
-def service_extended(
+def __service_extended(
         hashes: List[celaut_pb2.Any.Metadata.HashTag.Hash],
         config: celaut_pb2.Configuration,
         service_hash: str,
@@ -74,7 +74,7 @@ def launch_instance(gateway_stub,
         try:
             instance = next(client_grpc(
                 method=gateway_stub.StartService,
-                input=service_extended(
+                input=__service_extended(
                     hashes=hashes,
                     config=config,
                     service_hash=service_hash,
