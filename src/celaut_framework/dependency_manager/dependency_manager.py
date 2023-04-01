@@ -16,7 +16,8 @@ TIMEOUT_DEFAULT = 30
 FAILED_ATTEMPTS_DEFAULT = 20
 PASS_TIMEOUT_TIMES_DEFAULT = 5
 
-class DependencyManager(metaclass = Singleton):
+
+class DependencyManager(metaclass=Singleton):
 
     def __init__(self,
                  gateway_main_dir: str,
@@ -27,7 +28,7 @@ class DependencyManager(metaclass = Singleton):
                  failed_attempts: int = FAILED_ATTEMPTS_DEFAULT,
                  pass_timeout_times: int = PASS_TIMEOUT_TIMES_DEFAULT,
                  dev_client: str = None,
-            ):
+                 ):
 
         self.maintenance_sleep_time = maintenance_sleep_time
         self.timeout = timeout
@@ -40,10 +41,9 @@ class DependencyManager(metaclass = Singleton):
 
         self.services = {}
         self.gateway_stub = generate_gateway_stub(gateway_main_dir)
-        
+
         self.lock = Lock()
         Thread(target=self.maintenance, name='DepedencyMaintainer').start()
-
 
     def maintenance(self):
         while True:
@@ -79,17 +79,17 @@ class DependencyManager(metaclass = Singleton):
                 # En caso de que lleve mas de demasiado tiempo sin usarse.
                 # o se encuentre en estado 'zombie'
                 if datetime.now() - instance.use_datetime > timedelta(
-                        minutes = self.maintenance_sleep_time) \
+                        minutes=self.maintenance_sleep_time) \
                         or instance.is_zombie(
-                    pass_timeout_times = service_config.pass_timeout_times,
-                    timeout = service_config.timeout,
-                    failed_attempts = service_config.failed_attempts
+                    pass_timeout_times=service_config.pass_timeout_times,
+                    timeout=service_config.timeout,
+                    failed_attempts=service_config.failed_attempts
                 ):
                     instance.stop(self.gateway_stub)
                 # En caso contrario añade de nuevo la instancia a su respectiva cola.
                 else:
                     self.lock.acquire()
-                    service_config.add_instance(instance, deep = True)
+                    service_config.add_instance(instance, deep=True)
                     self.lock.release()
 
     def add_service(self,
@@ -101,10 +101,10 @@ class DependencyManager(metaclass = Singleton):
                     failed_attempts: int = None,
                     pass_timeout_times: int = None
                     ) -> ServiceInterface:
-        
+
         if not config:
             config = celaut_pb2.Configuration()
-            
+
         service_config_id: str = SHA3_256(
             bytes(service_hash, 'utf-8') + SHA3_256(
                 config.SerializeToString()
@@ -112,27 +112,26 @@ class DependencyManager(metaclass = Singleton):
         ).hex()
         self.lock.acquire()
         service_config = ServiceConfig(
-                service_hash = service_hash,
-                config = config,
-                stub_class = stub_class,
-                timeout = timeout if timeout else self.timeout,
-                failed_attempts = failed_attempts if failed_attempts else self.failed_attempts,
-                pass_timeout_times = pass_timeout_times if pass_timeout_times else self.pass_timeout_times,
-                dynamic = dynamic,
-                dev_client = self.dev_client,
-                static_service_directory = self.static_service_directory,
-                dynamic_service_directory = self.dynamic_service_directory
-            )
+            service_hash=service_hash,
+            config=config,
+            stub_class=stub_class,
+            timeout=timeout if timeout else self.timeout,
+            failed_attempts=failed_attempts if failed_attempts else self.failed_attempts,
+            pass_timeout_times=pass_timeout_times if pass_timeout_times else self.pass_timeout_times,
+            dynamic=dynamic,
+            dev_client=self.dev_client,
+            static_service_directory=self.static_service_directory,
+            dynamic_service_directory=self.dynamic_service_directory
+        )
         self.services.update({
-            service_config_id : service_config
+            service_config_id: service_config
         })
         self.lock.release()
-        
+
         return ServiceInterface(
-            service_with_config = service_config,
-            gateway_stub = self.gateway_stub
+            service_with_config=service_config,
+            gateway_stub=self.gateway_stub
         )
-        
 
     def get_service_with_config(self, service_config_id: str) -> gateway_pb2.ServiceWithConfig:
         return self.services[service_config_id].get_service_with_config()
