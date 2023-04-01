@@ -12,18 +12,18 @@ from celaut_framework.protos import celaut_pb2 as celaut
 
 class ServiceConfig(object):
     def __init__(self,
-            service_hash: str, 
-            config: celaut.Configuration,
-            stub_class,
-            timeout: int,
-            failed_attempts: int,
-            pass_timeout_times: int,
-            dynamic: bool,
-            dev_client: str,
-            static_service_directory: str,
-            dynamic_service_directory: str,
-            check_if_is_alive=None,
-        ):
+                 service_hash: str,
+                 config: celaut.Configuration,
+                 stub_class,
+                 timeout: int,
+                 failed_attempts: int,
+                 pass_timeout_times: int,
+                 dynamic: bool,
+                 dev_client: str,
+                 static_service_directory: str,
+                 dynamic_service_directory: str,
+                 check_if_is_alive=None,
+                 ):
 
         self.lock: Lock = Lock()
 
@@ -36,8 +36,8 @@ class ServiceConfig(object):
         self.config = config if config else celaut.Configuration()
         self.hashes = [
             celaut.Any.Metadata.HashTag.Hash(
-                type = SHA3_256_ID,
-                value = bytes.fromhex(service_hash)
+                type=SHA3_256_ID,
+                value=bytes.fromhex(service_hash)
             )
         ]
 
@@ -64,7 +64,6 @@ class ServiceConfig(object):
         except IndexError:
             LOGGER('    list empty --> ' + str(self.instances))
             raise IndexError
-        
 
     def launch_instance(self, gateway_stub) -> ServiceInstance:
         instance = launch_instance(
@@ -72,9 +71,9 @@ class ServiceConfig(object):
             service_hash=self.service_hash,
             hashes=self.hashes,
             config=self.config,
-            static_service_directory = self.static_service_directory if self.static_service_directory \
+            static_service_directory=self.static_service_directory if self.static_service_directory \
                 else STATIC_SERVICE_DIRECTORY,
-            dynamic_service_directory = self.dynamic_service_directory if self.dynamic_service_directory \
+            dynamic_service_directory=self.dynamic_service_directory if self.dynamic_service_directory \
                 else DYNAMIC_SERVICE_DIRECTORY,
             dynamic=self.dynamic,
             dev_client=self.dev_client
@@ -89,8 +88,8 @@ class ServiceConfig(object):
 
         return ServiceInstance(
             stub=generate_instance_stub(
-                stub_class = self.stub_class,
-                uri = celaut_uri_to_str(uri)
+                stub_class=self.stub_class,
+                uri=celaut_uri_to_str(uri)
             ),
             token=instance.token,
             check_if_is_alive=self.check_if_is_alive if self.check_if_is_alive \
