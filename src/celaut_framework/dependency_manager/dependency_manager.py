@@ -1,11 +1,13 @@
 from datetime import timedelta, datetime
 from threading import Thread, Lock
 from time import sleep
+from typing import Dict
 
+from celaut_framework.dependency_manager.service_interface import ServiceInterface
+from celaut_framework.dependency_manager.service_instance import ServiceInstance
 from celaut_framework.dependency_manager.service_config import ServiceConfig
 from celaut_framework.gateway.communication import generate_gateway_stub
-from celaut_framework.gateway.protos import gateway_pb2, celaut_pb2
-from celaut_framework.dependency_manager.service_interface import ServiceInterface
+from celaut_framework.gateway.protos import gateway_pb2, celaut_pb2, gateway_pb2_grpc
 from celaut_framework.utils.lambdas import SHA3_256
 from celaut_framework.utils.lambdas import LOGGER
 from celaut_framework.utils.singleton import Singleton
@@ -38,8 +40,8 @@ class DependencyManager(metaclass=Singleton):
         self.static_service_directory = static_service_directory
         self.dynamic_service_directory = dynamic_service_directory
 
-        self.services = {}
-        self.gateway_stub = generate_gateway_stub(gateway_main_dir)
+        self.services: Dict[str, ServiceConfig] = {}
+        self.gateway_stub: gateway_pb2_grpc.GatewayStub = generate_gateway_stub(gateway_main_dir)
 
         self.lock = Lock()
         Thread(target=self.maintenance, name='DependencyMaintainer').start()
@@ -53,12 +55,12 @@ class DependencyManager(metaclass=Singleton):
                 self.lock.acquire()
 
                 try:
-                    service_config = self.services[
+                    service_config: ServiceConfig = self.services[
                         list(self.services)[index]
                     ]
                     index += 1
                     try:
-                        instance = service_config.get_instance(deep=True)
+                        instance: ServiceInstance = service_config.get_instance(deep=True)
 
                     except IndexError:
                         # No hay instancias disponibles en esta cola.
@@ -109,23 +111,22 @@ class DependencyManager(metaclass=Singleton):
                 config.SerializeToString()
             )
         ).hex()
-        self.lock.acquire()
-        service_config = ServiceConfig(
-            service_hash=service_hash,
-            config=config,
-            stub_class=stub_class,
-            timeout=timeout if timeout else self.timeout,
-            failed_attempts=failed_attempts if failed_attempts else self.failed_attempts,
-            pass_timeout_times=pass_timeout_times if pass_timeout_times else self.pass_timeout_times,
-            dynamic=dynamic,
-            dev_client=self.dev_client,
-            static_service_directory=self.static_service_directory,
-            dynamic_service_directory=self.dynamic_service_directory
-        )
-        self.services.update({
-            service_config_id: service_config
-        })
-        self.lock.release()
+        with self.lock:
+            service_config: ServiceConfig = ServiceConfig(
+                service_hash=service_hash,
+                config=config,
+                stub_class=stub_class,
+                timeout=timeout if timeout else self.timeout,
+                failed_attempts=failed_attempts if failed_attempts else self.failed_attempts,
+                pass_timeout_times=pass_timeout_times if pass_timeout_times else self.pass_timeout_times,
+                dynamic=dynamic,
+                dev_client=self.dev_client,
+                static_service_directory=self.static_service_directory,
+                dynamic_service_directory=self.dynamic_service_directory
+            )
+            self.services.update({
+                service_config_id: service_config
+            })
 
         return ServiceInterface(
             service_with_config=service_config,

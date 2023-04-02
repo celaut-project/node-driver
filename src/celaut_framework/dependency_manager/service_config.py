@@ -1,4 +1,5 @@
 from threading import Lock
+from typing import List
 
 from celaut_framework.dependency_manager.service_instance import ServiceInstance
 from celaut_framework.gateway.communication import generate_instance_stub, launch_instance
@@ -41,8 +42,8 @@ class ServiceConfig(object):
         ]
 
         # Service's instances.
-        self.instances = []  # se da uso de una pila para que el 'maintainer' detecte las instancias que quedan en desuso,
-        #  ya que quedarán estancadas al final de la pila.
+        self.instances: List[ServiceInstance] = []  # se da uso de una pila para que el 'maintainer' detecte las instancias
+        # que quedan en desuso, ya que quedarán estancadas al final de la pila.
 
         self.check_if_is_alive = check_if_is_alive
         self.timeout = timeout
@@ -91,7 +92,8 @@ class ServiceConfig(object):
                 uri=celaut_uri_to_str(uri)
             ),
             token=instance.token,
-            check_if_is_alive=self.check_if_is_alive if self.check_if_is_alive \
+            check_if_is_alive=self.check_if_is_alive
+                if self.check_if_is_alive
                 else lambda timeout: is_open(timeout=timeout, ip=uri.ip, port=uri.port)
         )
 

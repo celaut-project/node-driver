@@ -10,18 +10,18 @@ class ServiceInterface:
                  service_with_config: ServiceConfig
                  ):
         self.gateway_stub = gateway_stub
-        self.sc = service_with_config
+        self.sc: ServiceConfig = service_with_config
 
     def get_instance(self) -> ServiceInstance:
         self.sc.lock.acquire()
 
         try:
-            instance = self.sc.get_instance()
+            instance: ServiceInstance = self.sc.get_instance()
             self.sc.lock.release()
 
         except IndexError:
             self.sc.lock.release()
-            instance = self.sc.launch_instance(
+            instance: ServiceInstance = self.sc.launch_instance(
                 self.gateway_stub
             )
 
