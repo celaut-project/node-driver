@@ -42,7 +42,7 @@ class DependencyManager(metaclass=Singleton):
         self.gateway_stub = generate_gateway_stub(gateway_main_dir)
 
         self.lock = Lock()
-        Thread(target=self.maintenance, name='DepedencyMaintainer').start()
+        Thread(target=self.maintenance, name='DependencyMaintainer').start()
 
     def maintenance(self):
         while True:
