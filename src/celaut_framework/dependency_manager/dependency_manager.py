@@ -8,7 +8,7 @@ from celaut_framework.dependency_manager.service_instance import ServiceInstance
 from celaut_framework.dependency_manager.service_config import ServiceConfig
 from celaut_framework.gateway.communication import generate_gateway_stub
 from celaut_framework.gateway.protos import gateway_pb2, celaut_pb2, gateway_pb2_grpc
-from celaut_framework.utils.lambdas import SHA3_256
+from celaut_framework.utils.lambdas import SHA3_256, STATIC_SERVICE_DIRECTORY, DYNAMIC_SERVICE_DIRECTORY
 from celaut_framework.utils.lambdas import LOGGER
 from celaut_framework.utils.singleton import Singleton
 
@@ -22,8 +22,8 @@ class DependencyManager(metaclass=Singleton):
 
     def __init__(self,
                  gateway_main_dir: str,
-                 static_service_directory: str,
-                 dynamic_service_directory: str,
+                 static_service_directory: str = STATIC_SERVICE_DIRECTORY,
+                 dynamic_service_directory: str = DYNAMIC_SERVICE_DIRECTORY,
                  maintenance_sleep_time: int = MAINTENANCE_SLEEP_TIME_DEFAULT,
                  timeout: int = TIMEOUT_DEFAULT,
                  failed_attempts: int = FAILED_ATTEMPTS_DEFAULT,

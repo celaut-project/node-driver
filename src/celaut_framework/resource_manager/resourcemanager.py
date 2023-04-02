@@ -5,12 +5,13 @@ from time import sleep
 
 from celaut_framework.utils.singleton import Singleton
 
-mem_manager = lambda len: ResourceManager().lock(len=len)
+
+def mem_manager(len: int): return ResourceManager().lock(len=len)
 
 
 class ResourceManager(metaclass=Singleton):
     class RamLocker(object):
-        def __init__(self, _len, iobd):
+        def __init__(self, _len: int, iobd):
             self.len = _len
             self.iobd = iobd
 
