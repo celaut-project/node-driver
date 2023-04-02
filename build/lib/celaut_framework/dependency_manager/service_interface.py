@@ -10,19 +10,18 @@ class ServiceInterface:
                  service_with_config: ServiceConfig
                  ):
         self.gateway_stub = gateway_stub
-        self.sc = service_with_config
-
+        self.sc: ServiceConfig = service_with_config
 
     def get_instance(self) -> ServiceInstance:
         self.sc.lock.acquire()
 
         try:
-            instance = self.sc.get_instance()
+            instance: ServiceInstance = self.sc.get_instance()
             self.sc.lock.release()
 
         except IndexError:
             self.sc.lock.release()
-            instance = self.sc.launch_instance(
+            instance: ServiceInstance = self.sc.launch_instance(
                 self.gateway_stub
             )
 
@@ -35,9 +34,9 @@ class ServiceInterface:
         # la detiene, en caso contrario la introduce
         #  de nuevo en su cola correspondiente.
         if instance.is_zombie(
-            pass_timeout_times = self.sc.pass_timeout_times,
-            timeout = self.sc.timeout,
-            failed_attempts = self.sc.failed_attempts
+                pass_timeout_times=self.sc.pass_timeout_times,
+                timeout=self.sc.timeout,
+                failed_attempts=self.sc.failed_attempts
         ):
             instance.stop(
                 self.gateway_stub
@@ -46,6 +45,6 @@ class ServiceInterface:
         else:
             self.sc.lock.acquire()
             self.sc.add_instance(
-                instance = instance
+                instance=instance
             )
             self.sc.lock.release()

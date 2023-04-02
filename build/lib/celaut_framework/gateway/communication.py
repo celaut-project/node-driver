@@ -6,8 +6,7 @@ from grpcbigbuffer.client import Dir, client_grpc
 import grpc
 
 from celaut_framework.gateway.protos import gateway_pb2, gateway_pb2_grpc, celaut_pb2
-from celaut_framework.gateway.protos.gateway_pb2_grpcbf import StartService_input_partitions, StartService_input, \
-    StartService_input_single_partition
+from celaut_framework.gateway.protos.gateway_pb2_grpcbf import StartService_input
 from celaut_framework.utils.lambdas import LOGGER
 
 
@@ -21,7 +20,7 @@ def generate_instance_stub(stub_class, uri: str):
     return stub_class(grpc.insecure_channel(uri))
 
 
-def service_extended(
+def __service_extended(
         hashes: List[celaut_pb2.Any.Metadata.HashTag.Hash],
         config: celaut_pb2.Configuration,
         service_hash: str,
@@ -29,36 +28,30 @@ def service_extended(
         dynamic: bool,
         dev_client: str
 ):
-    use_config = True
-    for hash in hashes:
+    use_config: bool = True
+    for _hash in hashes:
         if use_config:  # Solo hace falta enviar la configuration en el primer paquete.
             use_config = False
-            if dev_client: yield gateway_pb2.Client(client_id=dev_client)
+            if dev_client:
+                yield gateway_pb2.Client(client_id=dev_client)
             yield gateway_pb2.HashWithConfig(
-                hash=hash,
+                hash=_hash,
                 config=config,
                 min_sysreq=celaut_pb2.Sysresources(
                     mem_limit=80 * pow(10, 6)
                 )
             )
-        yield hash
-    if dynamic:
-        if os.path.isfile(service_directory + service_hash + '/p1') and \
-                os.path.isfile(service_directory + service_hash + '/p2'):
-            yield (
-                gateway_pb2.ServiceWithMeta,
-                Dir(service_directory + service_hash + '/p1'),
-                Dir(service_directory + service_hash + '/p2')
-            )
-    else:
-        while True:
-            if not os.path.isfile(service_directory + 'services.zip'):
-                if os.path.isfile(service_directory + service_hash):
-                    yield gateway_pb2.ServiceWithMeta, Dir(service_directory + service_hash)
-                break
-            else:
-                sleep(1)
-                continue
+        yield _hash
+
+    while not dynamic and os.path.isfile(service_directory + 'services.zip'):
+        sleep(1)
+        continue
+
+    if os.path.isfile(service_directory + service_hash):
+        yield (
+            gateway_pb2.ServiceWithMeta,
+            Dir(service_directory + service_hash)
+        )
 
 
 def launch_instance(gateway_stub,
@@ -71,9 +64,9 @@ def launch_instance(gateway_stub,
     LOGGER('    launching new instance for solver ' + service_hash)
     while True:
         try:
-            instance = next(client_grpc(
+            instance: gateway_pb2.Instance = next(client_grpc(
                 method=gateway_stub.StartService,
-                input=service_extended(
+                input=__service_extended(
                     hashes=hashes,
                     config=config,
                     service_hash=service_hash,
@@ -84,8 +77,6 @@ def launch_instance(gateway_stub,
                 indices_parser=gateway_pb2.Instance,
                 partitions_message_mode_parser=True,
                 indices_serializer=StartService_input,
-                partitions_serializer=StartService_input_partitions if dynamic \
-                    else StartService_input_single_partition
             ))
             break
         except grpc.RpcError as e:

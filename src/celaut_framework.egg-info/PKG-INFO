@@ -1,4 +1,4 @@
-Metadata-Version: 1.2
+Metadata-Version: 2.1
 Name: celaut-framework
 Version: 0.0.1
 Summary: UNKNOWN
@@ -6,6 +6,9 @@ Home-page: https://github.com/jossemii/CelautFramework.git
 Author: Josemi Avellana
 Author-email: josemi.bnf@gmail.com
 License: UNKNOWN
-Description: UNKNOWN
 Platform: UNKNOWN
 Requires-Python: >=3.6
+License-File: LICENSE
+
+UNKNOWN
+
