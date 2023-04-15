@@ -30,18 +30,24 @@ def __service_extended(
 ):
     use_config: bool = True
     for _hash in hashes:
+
         if use_config:  # Solo hace falta enviar la configuration en el primer paquete.
             use_config = False
             if dev_client:
                 yield gateway_pb2.Client(client_id=dev_client)
             yield gateway_pb2.HashWithConfig(
-                hash=_hash,
+                hash=celaut_pb2.Any.HashTag.Hash( # ??
+                    type=_hash.type,
+                    value=_hash.value
+                ),
                 config=config,
                 min_sysreq=celaut_pb2.Sysresources(
                     mem_limit=80 * pow(10, 6)
                 )
             )
-        yield _hash
+
+        else:
+            yield _hash
 
     while not dynamic and os.path.isfile(service_directory + 'services.zip'):
         sleep(1)
