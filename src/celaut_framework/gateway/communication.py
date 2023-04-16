@@ -36,10 +36,7 @@ def __service_extended(
             if dev_client:
                 yield gateway_pb2.Client(client_id=dev_client)
             yield gateway_pb2.HashWithConfig(
-                hash=celaut_pb2.Any.HashTag.Hash( # ??
-                    type=_hash.type,
-                    value=_hash.value
-                ),
+                hash=_hash,
                 config=config,
                 min_sysreq=celaut_pb2.Sysresources(
                     mem_limit=80 * pow(10, 6)
