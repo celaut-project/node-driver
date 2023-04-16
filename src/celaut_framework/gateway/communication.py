@@ -50,10 +50,10 @@ def __service_extended(
         sleep(1)
         continue
 
-    if os.path.isfile(service_directory + service_hash):
+    if os.path.exists(os.path.exists(service_directory, service_hash)):
         yield (
             gateway_pb2.ServiceWithMeta,
-            Dir(service_directory + service_hash)
+            Dir(os.path.exists(service_directory, service_hash))
         )
 
 
