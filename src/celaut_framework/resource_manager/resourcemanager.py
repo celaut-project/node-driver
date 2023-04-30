@@ -43,7 +43,7 @@ class ResourceManager(metaclass=Singleton):
 
         self.log = log
         self.ram_locked = 0
-        self.get_ram_avaliable = lambda: self.ram_pool() - self.ram_locked
+        self.get_ram_available = lambda: self.ram_pool() - self.ram_locked
         self.amount_lock = Lock()
 
         self.wait = []
@@ -73,7 +73,7 @@ class ResourceManager(metaclass=Singleton):
             self.log('\n--------- ' + message + ' -------------')
             self.log('RAM POOL       -> ' + ResourceManager.convert_size(self.ram_pool()))
             self.log('RAM LOCKED     -> ' + ResourceManager.convert_size(self.ram_locked))
-            self.log('RAM AVAILABLE  -> ' + ResourceManager.convert_size(self.get_ram_avaliable()))
+            self.log('RAM AVAILABLE  -> ' + ResourceManager.convert_size(self.get_ram_available()))
             self.log('RAM WAITING    -> ' + ResourceManager.convert_size(sum(self.wait)))
             self.log('GAS            -> ' + str(self.gas))
             self.log('-----------------------------------------\n')
@@ -94,7 +94,7 @@ class ResourceManager(metaclass=Singleton):
     def __push_wait_list(self, l: int):
         with self.wait_lock:
             self.wait.append(l)
-        if sum(self.wait) > self.get_ram_avaliable():
+        if sum(self.wait) > self.get_ram_available():
             with self.amount_lock:
                 self.__update_resources(
                     modify_formula=lambda m: self.ram_locked + m(self.wait)
@@ -122,7 +122,7 @@ class ResourceManager(metaclass=Singleton):
                 raise Exception
 
             with self.amount_lock:
-                if self.get_ram_avaliable() >= ram_amount:
+                if self.get_ram_available() >= ram_amount:
                     self.ram_locked += ram_amount
                 else:
                     continue
@@ -145,7 +145,7 @@ class ResourceManager(metaclass=Singleton):
 
     def prevent_kill(self, len: int) -> bool:
         with self.amount_lock:
-            b = self.get_ram_avaliable() >= len
+            b = self.get_ram_available() >= len
         return b
 
     def wait_to_prevent_kill(self, len: int) -> None:
