@@ -64,7 +64,7 @@ def launch_instance(gateway_stub,
                     dynamic,
                     dev_client,
                     ) -> gateway_pb2.Instance:
-    LOGGER('    launching new instance for solver ' + service_hash)
+    LOGGER('    launching new instance for service ' + service_hash)
     while True:
         try:
             instance: gateway_pb2.Instance = next(client_grpc(
