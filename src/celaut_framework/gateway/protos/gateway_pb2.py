@@ -4,156 +4,51 @@
 """Generated protocol buffer code."""
 from google.protobuf import descriptor as _descriptor
 from google.protobuf import descriptor_pool as _descriptor_pool
-from google.protobuf import message as _message
-from google.protobuf import reflection as _reflection
 from google.protobuf import symbol_database as _symbol_database
+from google.protobuf.internal import builder as _builder
 # @@protoc_insertion_point(imports)
 
 _sym_db = _symbol_database.Default()
 
 
-from celaut_framework.gateway.protos import celaut_pb2 as celaut__pb2
-from celaut_framework.gateway.protos import buffer_pb2 as buffer__pb2
+import celaut_pb2 as celaut__pb2
+from grpcbigbuffer import buffer_pb2 as buffer__pb2
 
 
 DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\rgateway.proto\x12\x07gateway\x1a\x0c\x63\x65laut.proto\x1a\x0c\x62uffer.proto\"\x16\n\tGasAmount\x12\t\n\x01n\x18\x01 \x01(\t\"\x1d\n\x0cTokenMessage\x12\r\n\x05token\x18\x01 \x01(\t\",\n\x06Refund\x12\"\n\x06\x61mount\x18\x01 \x01(\x0b\x32\x12.gateway.GasAmount\"\x85\x01\n\x07Payment\x12\x15\n\rdeposit_token\x18\x01 \x01(\t\x12;\n\x0f\x63ontract_ledger\x18\x03 \x01(\x0b\x32\".celaut.Service.Api.ContractLedger\x12&\n\ngas_amount\x18\x04 \x01(\x0b\x32\x12.gateway.GasAmount\"1\n\x07Metrics\x12&\n\ngas_amount\x18\x01 \x01(\x0b\x32\x12.gateway.GasAmount\"\x90\x01\n\x08Instance\x12\x30\n\rinstance_meta\x18\x01 \x01(\x0b\x32\x14.celaut.Any.MetadataH\x00\x88\x01\x01\x12\"\n\x08instance\x18\x02 \x01(\x0b\x32\x10.celaut.Instance\x12\x12\n\x05token\x18\x03 \x01(\tH\x01\x88\x01\x01\x42\x10\n\x0e_instance_metaB\x08\n\x06_token\"\x1b\n\x06\x43lient\x12\x11\n\tclient_id\x18\x01 \x01(\t\"\x1f\n\x0eRecursionGuard\x12\r\n\x05token\x18\x01 \x01(\t\"[\n\x0fServiceWithMeta\x12&\n\x08metadata\x18\x01 \x01(\x0b\x32\x14.celaut.Any.Metadata\x12 \n\x07service\x18\x02 \x01(\x0b\x32\x0f.celaut.Service\"\xb0\x02\n\x0eHashWithConfig\x12/\n\x04hash\x18\x01 \x01(\x0b\x32!.celaut.Any.Metadata.HashTag.Hash\x12%\n\x06\x63onfig\x18\x03 \x01(\x0b\x32\x15.celaut.Configuration\x12-\n\nmin_sysreq\x18\x04 \x01(\x0b\x32\x14.celaut.SysresourcesH\x00\x88\x01\x01\x12-\n\nmax_sysreq\x18\x05 \x01(\x0b\x32\x14.celaut.SysresourcesH\x01\x88\x01\x01\x12\x33\n\x12initial_gas_amount\x18\x06 \x01(\x0b\x32\x12.gateway.GasAmountH\x02\x88\x01\x01\x42\r\n\x0b_min_sysreqB\r\n\x0b_max_sysreqB\x15\n\x13_initial_gas_amount\"\xad\x02\n\x11ServiceWithConfig\x12)\n\x07service\x18\x02 \x01(\x0b\x32\x18.gateway.ServiceWithMeta\x12%\n\x06\x63onfig\x18\x03 \x01(\x0b\x32\x15.celaut.Configuration\x12-\n\nmin_sysreq\x18\x04 \x01(\x0b\x32\x14.celaut.SysresourcesH\x00\x88\x01\x01\x12-\n\nmax_sysreq\x18\x05 \x01(\x0b\x32\x14.celaut.SysresourcesH\x01\x88\x01\x01\x12\x33\n\x12initial_gas_amount\x18\x06 \x01(\x0b\x32\x12.gateway.GasAmountH\x02\x88\x01\x01\x42\r\n\x0b_min_sysreqB\r\n\x0b_max_sysreqB\x15\n\x13_initial_gas_amount\"k\n\"ModifyServiceSystemResourcesOutput\x12$\n\x06sysreq\x18\x01 \x01(\x0b\x32\x14.celaut.Sysresources\x12\x1f\n\x03gas\x18\x02 \x01(\x0b\x32\x12.gateway.GasAmount\"w\n!ModifyServiceSystemResourcesInput\x12(\n\nmin_sysreq\x18\x01 \x01(\x0b\x32\x14.celaut.Sysresources\x12(\n\nmax_sysreq\x18\x02 \x01(\x0b\x32\x14.celaut.Sysresources2\xdb\x02\n\x07Gateway\x12\x34\n\x0cStartService\x12\x0e.buffer.Buffer\x1a\x0e.buffer.Buffer\"\x00(\x01\x30\x01\x12\x33\n\x0bStopService\x12\x0e.buffer.Buffer\x1a\x0e.buffer.Buffer\"\x00(\x01\x30\x01\x12\x33\n\x0bGetInstance\x12\x0e.buffer.Buffer\x1a\x0e.buffer.Buffer\"\x00(\x01\x30\x01\x12\x36\n\x0eGenerateClient\x12\x0e.buffer.Buffer\x1a\x0e.buffer.Buffer\"\x00(\x01\x30\x01\x12\x44\n\x1cModifyServiceSystemResources\x12\x0e.buffer.Buffer\x1a\x0e.buffer.Buffer\"\x00(\x01\x30\x01\x12\x32\n\nGetMetrics\x12\x0e.buffer.Buffer\x1a\x0e.buffer.Buffer\"\x00(\x01\x30\x01\x62\x06proto3')
 
-
-
-_GASAMOUNT = DESCRIPTOR.message_types_by_name['GasAmount']
-_TOKENMESSAGE = DESCRIPTOR.message_types_by_name['TokenMessage']
-_REFUND = DESCRIPTOR.message_types_by_name['Refund']
-_PAYMENT = DESCRIPTOR.message_types_by_name['Payment']
-_METRICS = DESCRIPTOR.message_types_by_name['Metrics']
-_INSTANCE = DESCRIPTOR.message_types_by_name['Instance']
-_CLIENT = DESCRIPTOR.message_types_by_name['Client']
-_RECURSIONGUARD = DESCRIPTOR.message_types_by_name['RecursionGuard']
-_SERVICEWITHMETA = DESCRIPTOR.message_types_by_name['ServiceWithMeta']
-_HASHWITHCONFIG = DESCRIPTOR.message_types_by_name['HashWithConfig']
-_SERVICEWITHCONFIG = DESCRIPTOR.message_types_by_name['ServiceWithConfig']
-_MODIFYSERVICESYSTEMRESOURCESOUTPUT = DESCRIPTOR.message_types_by_name['ModifyServiceSystemResourcesOutput']
-_MODIFYSERVICESYSTEMRESOURCESINPUT = DESCRIPTOR.message_types_by_name['ModifyServiceSystemResourcesInput']
-GasAmount = _reflection.GeneratedProtocolMessageType('GasAmount', (_message.Message,), {
-  'DESCRIPTOR' : _GASAMOUNT,
-  '__module__' : 'gateway_pb2'
-  # @@protoc_insertion_point(class_scope:gateway.GasAmount)
-  })
-_sym_db.RegisterMessage(GasAmount)
-
-TokenMessage = _reflection.GeneratedProtocolMessageType('TokenMessage', (_message.Message,), {
-  'DESCRIPTOR' : _TOKENMESSAGE,
-  '__module__' : 'gateway_pb2'
-  # @@protoc_insertion_point(class_scope:gateway.TokenMessage)
-  })
-_sym_db.RegisterMessage(TokenMessage)
-
-Refund = _reflection.GeneratedProtocolMessageType('Refund', (_message.Message,), {
-  'DESCRIPTOR' : _REFUND,
-  '__module__' : 'gateway_pb2'
-  # @@protoc_insertion_point(class_scope:gateway.Refund)
-  })
-_sym_db.RegisterMessage(Refund)
-
-Payment = _reflection.GeneratedProtocolMessageType('Payment', (_message.Message,), {
-  'DESCRIPTOR' : _PAYMENT,
-  '__module__' : 'gateway_pb2'
-  # @@protoc_insertion_point(class_scope:gateway.Payment)
-  })
-_sym_db.RegisterMessage(Payment)
-
-Metrics = _reflection.GeneratedProtocolMessageType('Metrics', (_message.Message,), {
-  'DESCRIPTOR' : _METRICS,
-  '__module__' : 'gateway_pb2'
-  # @@protoc_insertion_point(class_scope:gateway.Metrics)
-  })
-_sym_db.RegisterMessage(Metrics)
-
-Instance = _reflection.GeneratedProtocolMessageType('Instance', (_message.Message,), {
-  'DESCRIPTOR' : _INSTANCE,
-  '__module__' : 'gateway_pb2'
-  # @@protoc_insertion_point(class_scope:gateway.Instance)
-  })
-_sym_db.RegisterMessage(Instance)
-
-Client = _reflection.GeneratedProtocolMessageType('Client', (_message.Message,), {
-  'DESCRIPTOR' : _CLIENT,
-  '__module__' : 'gateway_pb2'
-  # @@protoc_insertion_point(class_scope:gateway.Client)
-  })
-_sym_db.RegisterMessage(Client)
-
-RecursionGuard = _reflection.GeneratedProtocolMessageType('RecursionGuard', (_message.Message,), {
-  'DESCRIPTOR' : _RECURSIONGUARD,
-  '__module__' : 'gateway_pb2'
-  # @@protoc_insertion_point(class_scope:gateway.RecursionGuard)
-  })
-_sym_db.RegisterMessage(RecursionGuard)
-
-ServiceWithMeta = _reflection.GeneratedProtocolMessageType('ServiceWithMeta', (_message.Message,), {
-  'DESCRIPTOR' : _SERVICEWITHMETA,
-  '__module__' : 'gateway_pb2'
-  # @@protoc_insertion_point(class_scope:gateway.ServiceWithMeta)
-  })
-_sym_db.RegisterMessage(ServiceWithMeta)
-
-HashWithConfig = _reflection.GeneratedProtocolMessageType('HashWithConfig', (_message.Message,), {
-  'DESCRIPTOR' : _HASHWITHCONFIG,
-  '__module__' : 'gateway_pb2'
-  # @@protoc_insertion_point(class_scope:gateway.HashWithConfig)
-  })
-_sym_db.RegisterMessage(HashWithConfig)
-
-ServiceWithConfig = _reflection.GeneratedProtocolMessageType('ServiceWithConfig', (_message.Message,), {
-  'DESCRIPTOR' : _SERVICEWITHCONFIG,
-  '__module__' : 'gateway_pb2'
-  # @@protoc_insertion_point(class_scope:gateway.ServiceWithConfig)
-  })
-_sym_db.RegisterMessage(ServiceWithConfig)
-
-ModifyServiceSystemResourcesOutput = _reflection.GeneratedProtocolMessageType('ModifyServiceSystemResourcesOutput', (_message.Message,), {
-  'DESCRIPTOR' : _MODIFYSERVICESYSTEMRESOURCESOUTPUT,
-  '__module__' : 'gateway_pb2'
-  # @@protoc_insertion_point(class_scope:gateway.ModifyServiceSystemResourcesOutput)
-  })
-_sym_db.RegisterMessage(ModifyServiceSystemResourcesOutput)
-
-ModifyServiceSystemResourcesInput = _reflection.GeneratedProtocolMessageType('ModifyServiceSystemResourcesInput', (_message.Message,), {
-  'DESCRIPTOR' : _MODIFYSERVICESYSTEMRESOURCESINPUT,
-  '__module__' : 'gateway_pb2'
-  # @@protoc_insertion_point(class_scope:gateway.ModifyServiceSystemResourcesInput)
-  })
-_sym_db.RegisterMessage(ModifyServiceSystemResourcesInput)
-
-_GATEWAY = DESCRIPTOR.services_by_name['Gateway']
+_globals = globals()
+_builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
+_builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'gateway_pb2', _globals)
 if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
-  _GASAMOUNT._serialized_start=54
-  _GASAMOUNT._serialized_end=76
-  _TOKENMESSAGE._serialized_start=78
-  _TOKENMESSAGE._serialized_end=107
-  _REFUND._serialized_start=109
-  _REFUND._serialized_end=153
-  _PAYMENT._serialized_start=156
-  _PAYMENT._serialized_end=289
-  _METRICS._serialized_start=291
-  _METRICS._serialized_end=340
-  _INSTANCE._serialized_start=343
-  _INSTANCE._serialized_end=487
-  _CLIENT._serialized_start=489
-  _CLIENT._serialized_end=516
-  _RECURSIONGUARD._serialized_start=518
-  _RECURSIONGUARD._serialized_end=549
-  _SERVICEWITHMETA._serialized_start=551
-  _SERVICEWITHMETA._serialized_end=642
-  _HASHWITHCONFIG._serialized_start=645
-  _HASHWITHCONFIG._serialized_end=949
-  _SERVICEWITHCONFIG._serialized_start=952
-  _SERVICEWITHCONFIG._serialized_end=1253
-  _MODIFYSERVICESYSTEMRESOURCESOUTPUT._serialized_start=1255
-  _MODIFYSERVICESYSTEMRESOURCESOUTPUT._serialized_end=1362
-  _MODIFYSERVICESYSTEMRESOURCESINPUT._serialized_start=1364
-  _MODIFYSERVICESYSTEMRESOURCESINPUT._serialized_end=1483
-  _GATEWAY._serialized_start=1486
-  _GATEWAY._serialized_end=1833
+  _globals['_GASAMOUNT']._serialized_start=54
+  _globals['_GASAMOUNT']._serialized_end=76
+  _globals['_TOKENMESSAGE']._serialized_start=78
+  _globals['_TOKENMESSAGE']._serialized_end=107
+  _globals['_REFUND']._serialized_start=109
+  _globals['_REFUND']._serialized_end=153
+  _globals['_PAYMENT']._serialized_start=156
+  _globals['_PAYMENT']._serialized_end=289
+  _globals['_METRICS']._serialized_start=291
+  _globals['_METRICS']._serialized_end=340
+  _globals['_INSTANCE']._serialized_start=343
+  _globals['_INSTANCE']._serialized_end=487
+  _globals['_CLIENT']._serialized_start=489
+  _globals['_CLIENT']._serialized_end=516
+  _globals['_RECURSIONGUARD']._serialized_start=518
+  _globals['_RECURSIONGUARD']._serialized_end=549
+  _globals['_SERVICEWITHMETA']._serialized_start=551
+  _globals['_SERVICEWITHMETA']._serialized_end=642
+  _globals['_HASHWITHCONFIG']._serialized_start=645
+  _globals['_HASHWITHCONFIG']._serialized_end=949
+  _globals['_SERVICEWITHCONFIG']._serialized_start=952
+  _globals['_SERVICEWITHCONFIG']._serialized_end=1253
+  _globals['_MODIFYSERVICESYSTEMRESOURCESOUTPUT']._serialized_start=1255
+  _globals['_MODIFYSERVICESYSTEMRESOURCESOUTPUT']._serialized_end=1362
+  _globals['_MODIFYSERVICESYSTEMRESOURCESINPUT']._serialized_start=1364
+  _globals['_MODIFYSERVICESYSTEMRESOURCESINPUT']._serialized_end=1483
+  _globals['_GATEWAY']._serialized_start=1486
+  _globals['_GATEWAY']._serialized_end=1833
 # @@protoc_insertion_point(module_scope)

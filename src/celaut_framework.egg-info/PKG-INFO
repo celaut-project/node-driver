@@ -3,11 +3,11 @@ Name: celaut-framework
 Version: 0.0.1
 Summary: UNKNOWN
 Home-page: https://github.com/jossemii/CelautFramework.git
-Author: Josemi Avellana
-Author-email: josemi.bnf@gmail.com
+Author: J.Avellana
+Author-email: jossemii@proton.me
 License: UNKNOWN
 Platform: UNKNOWN
-Requires-Python: >=3.6
+Requires-Python: >=3.11
 License-File: LICENSE
 
 UNKNOWN
