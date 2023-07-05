@@ -1,6 +1,6 @@
-from celaut_driver.dependency_manager.service_instance import ServiceInstance
+from node_driver.dependency_manager.service_instance import ServiceInstance
 
-from celaut_driver.dependency_manager.service_config import ServiceConfig
+from node_driver.dependency_manager.service_config import ServiceConfig
 
 
 class ServiceInterface:

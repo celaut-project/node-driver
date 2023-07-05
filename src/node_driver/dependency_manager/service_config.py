@@ -1,13 +1,13 @@
 from threading import Lock
 from typing import List
 
-from celaut_driver.dependency_manager.service_instance import ServiceInstance
-from celaut_driver.gateway.communication import generate_instance_stub, launch_instance
-from celaut_driver.gateway.protos import gateway_pb2, celaut_pb2 as celaut
-from celaut_driver.utils.get_grpc_uri import get_grpc_uri, celaut_uri_to_str
-from celaut_driver.utils.lambdas import LOGGER, SHA3_256_ID
-from celaut_driver.utils.network import is_open
-from celaut_driver.utils.read_file import get_from_registry
+from node_driver.dependency_manager.service_instance import ServiceInstance
+from node_driver.gateway.communication import generate_instance_stub, launch_instance
+from node_driver.gateway.protos import gateway_pb2, celaut_pb2 as celaut
+from node_driver.utils.get_grpc_uri import get_grpc_uri, celaut_uri_to_str
+from node_driver.utils.lambdas import LOGGER, SHA3_256_ID
+from node_driver.utils.network import is_open
+from node_driver.utils.read_file import get_from_registry
 
 
 class ServiceConfig(object):

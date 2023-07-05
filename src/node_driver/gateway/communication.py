@@ -5,9 +5,9 @@ from typing import List
 from grpcbigbuffer.client import Dir, client_grpc
 import grpc
 
-from celaut_driver.gateway.protos import gateway_pb2, gateway_pb2_grpc, celaut_pb2
-from celaut_driver.gateway.protos.gateway_pb2_grpcbf import StartService_input
-from celaut_driver.utils.lambdas import LOGGER
+from node_driver.gateway.protos import gateway_pb2, gateway_pb2_grpc, celaut_pb2
+from node_driver.gateway.protos.gateway_pb2_grpcbf import StartService_input
+from node_driver.utils.lambdas import LOGGER
 
 
 def generate_gateway_stub(gateway_uri: str) -> gateway_pb2_grpc.GatewayStub:

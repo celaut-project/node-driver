@@ -2,8 +2,8 @@ import os
 
 from grpcbigbuffer.utils import WITHOUT_BLOCK_POINTERS_FILE_NAME
 
-from celaut_driver.gateway.protos import gateway_pb2
-from celaut_driver.resource_manager.resourcemanager import mem_manager
+from node_driver.gateway.protos import gateway_pb2
+from node_driver.resource_manager.resourcemanager import mem_manager
 
 
 def generator(filename):
