@@ -1,5 +1,5 @@
 from threading import Lock
-from typing import List
+from typing import List, Callable, Any
 
 from node_driver.dependency_manager.service_instance import ServiceInstance
 from node_driver.gateway.communication import generate_instance_stub, launch_instance
@@ -95,10 +95,11 @@ class ServiceConfig(object):
                 else lambda timeout: is_open(timeout=timeout, ip=uri.ip, port=uri.port)
         )
 
-    def get_service_with_config(self) -> gateway_pb2.ServiceWithConfig:
+    def get_service_with_config(self, mem_manager: Callable[[int], Any]) -> gateway_pb2.ServiceWithConfig:
         service_with_meta = get_from_registry(
             service_hash=self.service_hash,
-            registry=self.dynamic_service_directory if self.dynamic else self.static_service_directory
+            registry=self.dynamic_service_directory if self.dynamic else self.static_service_directory,
+            mem_manager=mem_manager
         )
         return gateway_pb2.ServiceWithConfig(
             meta=service_with_meta.meta,
