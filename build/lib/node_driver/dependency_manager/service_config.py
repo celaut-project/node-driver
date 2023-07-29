@@ -1,13 +1,13 @@
 from threading import Lock
-from typing import List
+from typing import List, Callable, Any
 
-from celaut_driver.dependency_manager.service_instance import ServiceInstance
-from celaut_driver.gateway.communication import generate_instance_stub, launch_instance
-from celaut_driver.gateway.protos import gateway_pb2, celaut_pb2 as celaut
-from celaut_driver.utils.get_grpc_uri import get_grpc_uri, celaut_uri_to_str
-from celaut_driver.utils.lambdas import LOGGER, SHA3_256_ID
-from celaut_driver.utils.network import is_open
-from celaut_driver.utils.read_file import get_from_registry
+from node_driver.dependency_manager.service_instance import ServiceInstance
+from node_driver.gateway.communication import generate_instance_stub, launch_instance
+from node_driver.gateway.protos import gateway_pb2, celaut_pb2 as celaut
+from node_driver.utils.get_grpc_uri import get_grpc_uri, celaut_uri_to_str
+from node_driver.utils.lambdas import LOGGER, SHA3_256_ID
+from node_driver.utils.network import is_open
+from node_driver.utils.read_file import get_from_registry
 
 
 class ServiceConfig(object):
@@ -95,10 +95,11 @@ class ServiceConfig(object):
                 else lambda timeout: is_open(timeout=timeout, ip=uri.ip, port=uri.port)
         )
 
-    def get_service_with_config(self) -> gateway_pb2.ServiceWithConfig:
+    def get_service_with_config(self, mem_manager: Callable[[int], Any]) -> gateway_pb2.ServiceWithConfig:
         service_with_meta = get_from_registry(
             service_hash=self.service_hash,
-            registry=self.dynamic_service_directory if self.dynamic else self.static_service_directory
+            registry=self.dynamic_service_directory if self.dynamic else self.static_service_directory,
+            mem_manager=mem_manager
         )
         return gateway_pb2.ServiceWithConfig(
             meta=service_with_meta.meta,

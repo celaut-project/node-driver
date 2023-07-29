@@ -7,7 +7,7 @@ from time import sleep
 
 import grpc
 
-from celaut_driver.gateway.communication import stop
+from node_driver.gateway.communication import stop
 
 
 class ServiceInstance(object):

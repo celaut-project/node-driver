@@ -51,10 +51,7 @@ def __service_extended(
         continue
 
     if os.path.exists(os.path.join(service_directory, service_hash)):
-        yield (
-            gateway_pb2.ServiceWithMeta,
-            Dir(os.path.join(service_directory, service_hash))
-        )
+        yield Dir(dir=os.path.join(service_directory, service_hash), _type=gateway_pb2.ServiceWithMeta)
 
 
 def launch_instance(gateway_stub,
