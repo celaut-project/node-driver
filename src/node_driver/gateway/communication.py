@@ -6,7 +6,7 @@ from grpcbigbuffer.client import Dir, client_grpc
 import grpc
 
 from node_driver.gateway.protos import gateway_pb2, gateway_pb2_grpc, celaut_pb2
-from node_driver.gateway.protos.gateway_pb2_grpcbf import StartService_input
+from node_driver.gateway.protos.gateway_pb2_grpcbf import StartService_input_indices
 from node_driver.utils.lambdas import LOGGER
 
 
@@ -28,30 +28,27 @@ def __service_extended(
         dynamic: bool,
         dev_client: str
 ):
-    use_config: bool = True
-    for _hash in hashes:
+    if dev_client:
+        yield gateway_pb2.Client(client_id=dev_client)
 
-        if use_config:  # Solo hace falta enviar la configuration en el primer paquete.
-            use_config = False
-            if dev_client:
-                yield gateway_pb2.Client(client_id=dev_client)
-            yield gateway_pb2.HashWithConfig(
-                hash=_hash,
+    yield gateway_pb2.Configurator(
                 config=config,
                 min_sysreq=celaut_pb2.Sysresources(
                     mem_limit=80 * pow(10, 6)
                 )
             )
 
-        else:
-            yield _hash
+    for _hash in hashes:
+        yield _hash
 
     while not dynamic and os.path.isfile(service_directory + 'services.zip'):
         sleep(1)
         continue
 
+    # Aqui podría pasar los metadatos tambien.
+
     if os.path.exists(os.path.join(service_directory, service_hash)):
-        yield Dir(dir=os.path.join(service_directory, service_hash), _type=gateway_pb2.ServiceWithMeta)
+        yield Dir(dir=os.path.join(service_directory, service_hash), _type=celaut_pb2.Service)
 
 
 def launch_instance(gateway_stub,
@@ -76,7 +73,7 @@ def launch_instance(gateway_stub,
                 ),
                 indices_parser=gateway_pb2.Instance,
                 partitions_message_mode_parser=True,
-                indices_serializer=StartService_input,
+                indices_serializer=StartService_input_indices,
             ))
             break
         except grpc.RpcError as e:
