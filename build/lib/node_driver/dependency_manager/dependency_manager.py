@@ -1,7 +1,7 @@
 from datetime import timedelta, datetime
 from threading import Thread, Lock
 from time import sleep
-from typing import Dict, Callable, Any
+from typing import Dict, Callable, Any, Tuple, Union
 
 from node_driver.dependency_manager.service_interface import ServiceInterface
 from node_driver.dependency_manager.service_instance import ServiceInstance
@@ -134,5 +134,9 @@ class DependencyManager(metaclass=Singleton):
         )
 
     def get_service_with_config(self, service_config_id: str, mem_manager: Callable[[int], Any]) \
-            -> gateway_pb2.ServiceWithConfig:
-        return self.services[service_config_id].get_service_with_config(mem_manager=mem_manager)
+            -> Tuple[
+                Union[str, celaut_pb2.Service],
+                Union[str, celaut_pb2.Any.Metadata],
+                gateway_pb2.Configuration]:
+        raise Exception("Not implemented.")
+        # return self.services[service_config_id].get_service_with_config(mem_manager=mem_manager)

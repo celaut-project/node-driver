@@ -1,5 +1,5 @@
 from threading import Lock
-from typing import List, Callable, Any
+from typing import List, Callable, Any, Tuple, Union
 
 from node_driver.dependency_manager.service_instance import ServiceInstance
 from node_driver.gateway.communication import generate_instance_stub, launch_instance
@@ -91,18 +91,19 @@ class ServiceConfig(object):
             ),
             token=instance.token,
             check_if_is_alive=self.check_if_is_alive
-                if self.check_if_is_alive
-                else lambda timeout: is_open(timeout=timeout, ip=uri.ip, port=uri.port)
+            if self.check_if_is_alive
+            else lambda timeout: is_open(timeout=timeout, ip=uri.ip, port=uri.port)
         )
 
-    def get_service_with_config(self, mem_manager: Callable[[int], Any]) -> gateway_pb2.ServiceWithConfig:
-        service_with_meta = get_from_registry(
-            service_hash=self.service_hash,
-            registry=self.dynamic_service_directory if self.dynamic else self.static_service_directory,
-            mem_manager=mem_manager
-        )
-        return gateway_pb2.ServiceWithConfig(
-            meta=service_with_meta.meta,
-            definition=service_with_meta.service,
-            config=self.config
-        )
+    def get_service_with_config(self, mem_manager: Callable[[int], Any]) \
+            -> Tuple[
+                Union[str, celaut.Service],
+                Union[str, celaut.Any.Metadata],
+                gateway_pb2.Configuration]:
+        raise Exception("Not implemented.")
+
+        # return get_from_registry(
+        #     service_hash=self.service_hash,
+        #     registry=self.dynamic_service_directory if self.dynamic else self.static_service_directory,
+        #    mem_manager=mem_manager
+        # ), self.config
