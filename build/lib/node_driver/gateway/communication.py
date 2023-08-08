@@ -25,6 +25,7 @@ def __service_extended(
         config: celaut_pb2.Configuration,
         service_hash: str,
         service_directory: str,
+        metadata_directory: str,
         dynamic: bool,
         dev_client: str
 ):
@@ -41,11 +42,13 @@ def __service_extended(
     for _hash in hashes:
         yield _hash
 
-    while not dynamic and os.path.isfile(service_directory + 'services.zip'):
+    # TODO could use async here.
+    while not dynamic and os.path.isfile(os.path.join(service_directory, 'services.zip')):
         sleep(1)
         continue
 
-    # Aqui podría pasar los metadatos tambien.
+    if os.path.exists(os.path.join(metadata_directory, service_hash)):
+        yield Dir(dir=os.path.join(metadata_directory, service_hash), _type=celaut_pb2.Any.Metadata)
 
     if os.path.exists(os.path.join(service_directory, service_hash)):
         yield Dir(dir=os.path.join(service_directory, service_hash), _type=celaut_pb2.Service)
@@ -53,9 +56,11 @@ def __service_extended(
 
 def launch_instance(gateway_stub,
                     hashes, config, service_hash,
-                    dynamic_service_directory,
-                    static_service_directory,
-                    dynamic,
+                    static_service_directory: str,
+                    static_metadata_directory: str,
+                    dynamic_service_directory: str,
+                    dynamic_metadata_directory: str,
+                    dynamic: bool,
                     dev_client,
                     ) -> gateway_pb2.Instance:
     LOGGER('    launching new instance for service ' + service_hash)
@@ -68,6 +73,7 @@ def launch_instance(gateway_stub,
                     config=config,
                     service_hash=service_hash,
                     service_directory=dynamic_service_directory if dynamic else static_service_directory,
+                    metadata_directory=dynamic_metadata_directory if dynamic else static_metadata_directory,
                     dynamic=dynamic,
                     dev_client=dev_client
                 ),

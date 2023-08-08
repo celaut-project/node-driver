@@ -21,7 +21,9 @@ class ServiceConfig(object):
                  dynamic: bool,
                  dev_client: str,
                  static_service_directory: str,
+                 static_metadata_directory: str,
                  dynamic_service_directory: str,
+                 dynamic_metadata_directory: str,
                  check_if_is_alive=None,
                  ):
 
@@ -30,7 +32,9 @@ class ServiceConfig(object):
         self.stub_class = stub_class
         self.dev_client = dev_client
         self.static_service_directory = static_service_directory
+        self.static_metadata_directory = static_metadata_directory
         self.dynamic_service_directory = dynamic_service_directory
+        self.dynamic_metadata_directory = dynamic_metadata_directory
 
         self.service_hash: str = service_hash
         self.config: celaut.Configuration = config if config else celaut.Configuration()
@@ -72,7 +76,9 @@ class ServiceConfig(object):
             hashes=self.hashes,
             config=self.config,
             static_service_directory=self.static_service_directory,
+            static_metadata_directory=self.static_metadata_directory,
             dynamic_service_directory=self.dynamic_service_directory,
+            dynamic_metadata_directory=self.dynamic_metadata_directory,
             dynamic=self.dynamic,
             dev_client=self.dev_client
         )

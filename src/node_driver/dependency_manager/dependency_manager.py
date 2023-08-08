@@ -8,7 +8,8 @@ from node_driver.dependency_manager.service_instance import ServiceInstance
 from node_driver.dependency_manager.service_config import ServiceConfig
 from node_driver.gateway.communication import generate_gateway_stub
 from node_driver.gateway.protos import gateway_pb2, celaut_pb2, gateway_pb2_grpc
-from node_driver.utils.lambdas import SHA3_256, STATIC_SERVICE_DIRECTORY, DYNAMIC_SERVICE_DIRECTORY
+from node_driver.utils.lambdas import SHA3_256, STATIC_SERVICE_DIRECTORY, DYNAMIC_SERVICE_DIRECTORY, \
+    STATIC_METADATA_DIRECTORY, DYNAMIC_METADATA_DIRECTORY
 from node_driver.utils.lambdas import LOGGER
 from node_driver.utils.singleton import Singleton
 
@@ -23,7 +24,9 @@ class DependencyManager(metaclass=Singleton):
     def __init__(self,
                  gateway_main_dir: str,
                  static_service_directory: str = STATIC_SERVICE_DIRECTORY,
+                 static_metadata_directory: str = STATIC_METADATA_DIRECTORY,
                  dynamic_service_directory: str = DYNAMIC_SERVICE_DIRECTORY,
+                 dynamic_metadata_directory: str = DYNAMIC_METADATA_DIRECTORY,
                  maintenance_sleep_time: int = MAINTENANCE_SLEEP_TIME_DEFAULT,
                  timeout: int = TIMEOUT_DEFAULT,
                  failed_attempts: int = FAILED_ATTEMPTS_DEFAULT,
@@ -38,7 +41,9 @@ class DependencyManager(metaclass=Singleton):
 
         self.dev_client = dev_client
         self.static_service_directory = static_service_directory
+        self.static_metadata_directory = static_metadata_directory
         self.dynamic_service_directory = dynamic_service_directory
+        self.dynamic_metadata_directory = dynamic_metadata_directory
 
         self.services: Dict[str, ServiceConfig] = {}
         self.gateway_stub: gateway_pb2_grpc.GatewayStub = generate_gateway_stub(gateway_main_dir)
@@ -122,7 +127,9 @@ class DependencyManager(metaclass=Singleton):
                 dynamic=dynamic,
                 dev_client=self.dev_client,
                 static_service_directory=self.static_service_directory,
-                dynamic_service_directory=self.dynamic_service_directory
+                static_metadata_directory=self.static_metadata_directory,
+                dynamic_service_directory=self.dynamic_service_directory,
+                dynamic_metadata_directory=self.dynamic_metadata_directory
             )
             self.services.update({
                 service_config_id: service_config

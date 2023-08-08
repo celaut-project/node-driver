@@ -16,5 +16,7 @@ def SHA3_256(value: Union[bytes, bytearray, str]) -> bytes:
 
 # Directories
 
-DYNAMIC_SERVICE_DIRECTORY = '__services__/'
 STATIC_SERVICE_DIRECTORY = ''
+STATIC_METADATA_DIRECTORY = "__metadata__"
+DYNAMIC_SERVICE_DIRECTORY = '__services__'
+DYNAMIC_METADATA_DIRECTORY = "__metadata__"
