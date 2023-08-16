@@ -32,7 +32,7 @@ def __service_extended(
     if dev_client:
         yield gateway_pb2.Client(client_id=dev_client)
 
-    yield gateway_pb2.Configurator(
+    yield gateway_pb2.Configuration(
                 config=config,
                 min_sysreq=celaut_pb2.Sysresources(
                     mem_limit=80 * pow(10, 6)
