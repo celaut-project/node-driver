@@ -14,6 +14,7 @@ src/node_driver/dependency_manager/service_instance.py
 src/node_driver/dependency_manager/service_interface.py
 src/node_driver/gateway/__init__.py
 src/node_driver/gateway/communication.py
+src/node_driver/gateway/utils.py
 src/node_driver/gateway/protos/__init__.py
 src/node_driver/gateway/protos/celaut_pb2.py
 src/node_driver/gateway/protos/gateway_pb2.py

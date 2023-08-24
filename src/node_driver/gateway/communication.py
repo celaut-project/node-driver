@@ -1,12 +1,13 @@
 from time import sleep
 import os
-from typing import List
+from typing import List, Tuple
 
 from grpcbigbuffer.client import Dir, client_grpc
 import grpc
 
 from node_driver.gateway.protos import gateway_pb2, gateway_pb2_grpc, celaut_pb2
 from node_driver.gateway.protos.gateway_pb2_grpcbf import StartService_input_indices
+from node_driver.gateway.utils import from_gas_amount
 from node_driver.utils.lambdas import LOGGER
 
 
@@ -108,3 +109,24 @@ def stop(gateway_stub, token: str):
         except grpc.RpcError as e:
             LOGGER('GRPC ERROR STOPPING SOLVER ' + str(e))
             sleep(1)
+
+
+def modify_resources(i: dict, gateway_main_dir: str) -> Tuple[celaut_pb2.Sysresources, int]:
+    output: gateway_pb2.ModifyServiceSystemResourcesOutput = next(
+        client_grpc(
+            method=gateway_pb2_grpc.GatewayStub(
+                grpc.insecure_channel(gateway_main_dir)
+            ).ModifyServiceSystemResources,
+            input=gateway_pb2.ModifyServiceSystemResourcesInput(
+                min_sysreq=celaut_pb2.Sysresources(
+                    mem_limit=i['min']
+                ),
+                max_sysreq=celaut_pb2.Sysresources(
+                    mem_limit=i['max']
+                ),
+            ),
+            partitions_message_mode_parser=True,
+            indices_parser=gateway_pb2.ModifyServiceSystemResourcesOutput,
+        )
+    )
+    return output.sysreq, from_gas_amount(output.gas)
