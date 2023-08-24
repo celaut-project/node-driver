@@ -34,9 +34,13 @@ def __service_extended(
 
     yield gateway_pb2.Configuration(
                 config=config,
-                min_sysreq=celaut_pb2.Sysresources(
-                    mem_limit=80 * pow(10, 6)
-                )
+                resources=gateway_pb2.CombinationResources(clause={
+                    1: gateway_pb2.CombinationResource.Clause(
+                        min_sysreq=celaut_pb2.Sysresources(
+                            mem_limit=80 * pow(10, 6)
+                        )
+                    )
+                })
             )
 
     for _hash in hashes:
