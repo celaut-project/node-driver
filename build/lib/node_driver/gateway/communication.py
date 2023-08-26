@@ -36,7 +36,7 @@ def __service_extended(
     yield gateway_pb2.Configuration(
                 config=config,
                 resources=gateway_pb2.CombinationResources(clause={
-                    1: gateway_pb2.CombinationResource.Clause(
+                    1: gateway_pb2.CombinationResources.Clause(
                         min_sysreq=celaut_pb2.Sysresources(
                             mem_limit=80 * pow(10, 6)
                         )
