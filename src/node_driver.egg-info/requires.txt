@@ -1,1 +1,1 @@
-grpcbigbuffer@ git+https://github.com/jossemii/GRPCBigBuffer
+grpcbigbuffer@ git+https://github.com/jossemii/grpc-bb

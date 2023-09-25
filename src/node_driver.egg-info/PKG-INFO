@@ -1,8 +1,8 @@
 Metadata-Version: 2.1
 Name: node-driver
 Version: 0.0.1
-Home-page: https://github.com/jossemii/CelautFramework.git
-Author: J.Avellana
+Home-page: https://github.com/jossemii/node-driver.git
+Author: jossemii
 Author-email: jossemii@proton.me
 Requires-Python: >=3.11
 License-File: LICENSE
