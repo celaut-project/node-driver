@@ -10,7 +10,7 @@ setup(
 
     py_modules=['node_driver'],
     install_requires=[
-        'grpcbigbuffer@git+https://github.com/pee-rpc-protocol/pee-rpc',
+        'pee-rpc@git+https://github.com/pee-rpc-protocol/pee-rpc',
     ],
     package_dir={"": "src"},
     packages=find_packages(where="src"),
